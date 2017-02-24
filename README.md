@@ -1,5 +1,7 @@
 # inline-markdown-editor
 
+[![Build Status](https://travis-ci.org/publiclab/inline-markdown-editor.svg)](https://travis-ci.org/publiclab/inline-markdown-editor)
+
 An inline wysiwyg markdown document editor based on replacing string subsections. WYSIWYG possible via the [woofmark](https://github.com/bevacqua/woofmark)-based [PublicLab.Editor](https://github.com/publiclab/PublicLab.Editor).
 
 ## Basics
