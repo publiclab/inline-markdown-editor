@@ -9,14 +9,6 @@ module.exports = function insertEditLink(uniqueId, el, form, onEdit, editor) {
   $('.inline-edit-link-' + uniqueId).click(function inlineEditLinkClick(e) {
     e.preventDefault();
     form.toggle();
-    if (onEdit) {
-      if (document.hasOwnProperty('PL') && $('#' + uniqueId).find('.wk-container').length === 0) {
-        // insert rich editor
-        editor = new PL.Editor({
-          textarea: $('#' + uniqueId + ' textarea')[0]
-        });
-      }
-      onEdit(editor); // send it back for later use
-    }
+    if (onEdit) onEdit(); // callback
   });
 }

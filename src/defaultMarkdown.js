@@ -1,5 +1,5 @@
 // Runs megamark with default whitelist
-module.exports = function replaceWithMarkdown(element) {
+module.exports = function defaultMarkdown(element) {
   var html = require('megamark')(
     element,
     { 
@@ -25,21 +25,19 @@ module.exports = function replaceWithMarkdown(element) {
       }
     }
   );
+  function addCallouts(html) {
+    var pattern = /(^|\s)@([A-z\_]+)\b/g;
+    return html.replace(pattern, function replaceCallouts(m, p1, p2) {
+      return p1 + '<a href="/profile/' + p2 + '">@' + p2 + '</a>';
+    });
+  }
+  function addHashtags(html) {
+    var pattern = /(^|\s)#([A-z\-]+)\b/g;
+    return html.replace(pattern, function replaceHashtags(m, p1, p2) {
+      return p1 + '<a href="/tag/' + p2 + '">#' + p2 + '</a>';
+    });
+  }
   html = addCallouts(html);
   html = addHashtags(html);
   return html;
-}
-
-function addCallouts(html) {
-  var pattern = /(^|\s)@([A-z\_]+)\b/g;
-  return html.replace(pattern, function replaceCallouts(m, p1, p2) {
-    return p1 + '<a href="/profile/' + p2 + '">@' + p2 + '</a>';
-  });
-}
-
-function addHashtags(html) {
-  var pattern = /(^|\s)#([A-z\-]+)\b/g;
-  return html.replace(pattern, function replaceHashtags(m, p1, p2) {
-    return p1 + '<a href="/tag/' + p2 + '">#' + p2 + '</a>';
-  });
 }
