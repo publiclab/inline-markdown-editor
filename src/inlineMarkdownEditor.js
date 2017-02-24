@@ -5,12 +5,12 @@ inlineMarkdownEditor = function inlineMarkdownEditor(o) {
   o.onComplete = o.onComplete || require('./onComplete.js');
   o.onFail = o.onFail || require('./onFail.js');
   o.isEditable = o.isEditable || require('./isEditable.js');
+  o.processSections = require('./processSections.js');
   var el = $(o.selector);
   // split by double-newline:
   var sections = el.html().split('\n\n');
   el.html('');
-  var processSections = require('./processSections.js');
-  processSections(sections, o);
+  o.processSections(sections, o);
   el.show();
   return {
     element: el,
@@ -18,5 +18,4 @@ inlineMarkdownEditor = function inlineMarkdownEditor(o) {
     options: o
   };
 }
-
 module.exports = inlineMarkdownEditor;
