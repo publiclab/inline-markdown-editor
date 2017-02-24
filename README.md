@@ -49,6 +49,20 @@ inlineMarkdownEditor({
 });
 ```
 
+## Contributing
+
+To install this library for development, you'll need [NodeJS](https://nodejs.org). You can get the detailed instruction on installing node and npm in its official [documentation](https://docs.npmjs.com/getting-started/installing-node).
+
+After installing node and npm run `npm install` from the root directory.
+
+`inline-markdown-editor` uses grunt - the JavaScript task runner - for compilation of the modules. To install grunt run `npm install -g grunt-cli`. You may have to use `sudo` for root privileges.
+
+Make changes to the files in the `/src/` directory, then run `grunt build` to compile into `/dist/inlineMarkdownEditor.js`. This will use `grunt-browserify` to concatenate and include any node modules named in `require()` statements. You'll then be able to try it out in `/examples/index.html`. Run `grunt` and leave it running to build as you go.
+
+## Tests
+
+Tests are set up with Jasmine, and can be run with `npm test`.
+
 ## Goals
 
 * configurable editors
