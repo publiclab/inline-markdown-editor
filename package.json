@@ -1,0 +1,40 @@
+{
+  "name": "inline-markdown-editor",
+  "version": "0.0.1",
+  "description": "An inline wysiwyg markdown document editor based on replacing string subsections. WYSIWYG possible via woofmark.",
+  "main": "dist/inlineMarkdownEditor.js",
+  "scripts": {
+    "test": "tape test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/publiclab/inline-markdown-editor.git"
+  },
+  "keywords": [
+    "markdown",
+    "editor",
+    "wikis",
+    "Public Lab"
+  ],
+  "author": "Public Lab",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/publiclab/inline-markdown-editor/issues"
+  },
+  "dependencies": {
+    "font-awesome": "~4.5.0",
+    "bootstrap": "~3.2.0",
+    "jquery": "~2"
+  },
+  "devDependencies": {
+    "megamark": "^3.2.2",
+    "tape": "^3.5.0",
+    "browserify": "13.0.0",
+    "grunt": "^0.4.5",
+    "grunt-browserify": "^5.0.0",
+    "grunt-contrib-concat": "^0.5.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "matchdep": "^0.3.0" 
+  },
+  "homepage": "https://github.com/publiclab/inline-markdown-editor"
+}

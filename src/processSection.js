@@ -1,30 +1,31 @@
-//= require wikis/replaceWithMarkdown.js
-//= require wikis/buildSectionForm.js
-//= require wikis/insertEditLink.js
-function processSection(markdown, o) {
+module.exports = function processSection(markdown, o) {
   var html,
       randomNum   = parseInt(Math.random() * 10000),
-      uniqueId    = "section-form-" + randomNum;
+      uniqueId    = "section-form-" + randomNum,
+      filteredMarkdown = markdown,
+      replaceWithMarkdown = require('./replaceWithMarkdown.js'),
+      buildSectionForm    = require('./buildSectionForm.js'),
+      insertEditLink      = require('./insertEditLink.js');
 
-  if (o.preProcessor) markdown = o.preProcessor(markdown);
-  html = replaceWithMarkdown(markdown);
+  if (o.preProcessor) filteredMarkdown = o.preProcessor(markdown);
+  html = replaceWithMarkdown(filteredMarkdown);
 
   $(o.selector).append('<div class="inline-section inline-section-' + uniqueId + '"></div>');
   var el = $(o.selector).find('.inline-section:last');
   el.append(html);
 
-  if (o.postProcessor) o.postProcessor();
-  var form = insertFormIfMarkdown(markdown, el, uniqueId);
+  if (o.postProcessor) o.postProcessor(el);
+  var form = insertFormIfMarkdown(filteredMarkdown, el, uniqueId);
 
   var message = $('#' + uniqueId + ' .section-message');
 
-  function insertFormIfMarkdown(markdown, el, uniqueId) {
+  function insertFormIfMarkdown(_markdown, el, uniqueId) {
     // filter? Only p,h1-5,ul?
-    var isMarkdown = markdown.match(/</) === null; // has tags
-        isMarkdown = isMarkdown && markdown.match(/\*\*\*\*/) === null; // no horizontal rules
+    var isMarkdown = _markdown.match(/</) === null; // has tags
+        isMarkdown = isMarkdown && _markdown.match(/\*\*\*\*/) === null; // no horizontal rules
  
     if (isMarkdown) {
-      var formHtml = buildSectionForm(uniqueId, markdown);
+      var formHtml = buildSectionForm(uniqueId, _markdown);
       el.after(formHtml);
       var form = $('#' + uniqueId);
       insertEditLink(uniqueId, el, form, onEdit);

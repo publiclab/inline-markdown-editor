@@ -1,4 +1,4 @@
-function insertEditLink(uniqueId, el, form, onEdit, editor) {
+module.exports = function insertEditLink(uniqueId, el, form, onEdit, editor) {
   var editBtns = "";
   editBtns += "<span class='inline-edit-btns inline-edit-btns-" + uniqueId + "'>";
   editBtns +=   "<a class='inline-edit-btn inline-edit-link inline-edit-link-" + uniqueId + "'><i class='fa fa-pencil'></i></a>";
@@ -10,7 +10,7 @@ function insertEditLink(uniqueId, el, form, onEdit, editor) {
     e.preventDefault();
     form.toggle();
     if (onEdit) {
-      if ($('#' + uniqueId).find('.wk-container').length === 0) {
+      if (document.hasOwnProperty('PL') && $('#' + uniqueId).find('.wk-container').length === 0) {
         // insert rich editor
         editor = new PL.Editor({
           textarea: $('#' + uniqueId + ' textarea')[0]
