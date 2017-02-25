@@ -6,6 +6,13 @@ module.exports = function(grunt) {
 
     grunt.initConfig({
 
+      connect: {
+        test : {
+          port : 8000,
+          base: 'test'
+        }
+      },
+
       pkg: grunt.file.readJSON('package.json'),
 
       watch: {
@@ -54,6 +61,8 @@ module.exports = function(grunt) {
     grunt.registerTask('build', [
         'browserify:dist'
     ]);
+
+    grunt.registerTask('test', ['connect', 'jasmine']);
 
     grunt.loadNpmTasks('grunt-contrib-jasmine');
 

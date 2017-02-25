@@ -5,7 +5,7 @@
   "main": "dist/inlineMarkdownEditor.js",
   "scripts": {
     "build": "grunt build",
-    "test": "grunt jasmine"
+    "test": "grunt test"
   },
   "repository": {
     "type": "git",
