@@ -73,8 +73,6 @@ Tests are set up with Jasmine, and can be run with `npm test`.
 
 ## Tests we want
 
-* count sections
-* check that it doesn't add a form for whitespace or hrs
 * defaultMarkdown
 * preProcessor
 * postProcessor

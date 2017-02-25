@@ -4,6 +4,5 @@ module.exports = function isEditable(markdown) {
   editable = editable && markdown.match(/\*\*\*\*/) === null; // no horizontal rules: ****
   editable = editable && markdown.match(/\-\-\-\-/) === null; // no horizontal rules: ----
   editable = editable && markdown !== ''; // no blanks
-// also add no pure whitespace
   return editable;
 } 
