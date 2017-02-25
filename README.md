@@ -77,4 +77,3 @@ Tests are set up with Jasmine, and can be run with `npm test`.
 * preProcessor
 * postProcessor
 * insertForm: look for the form, the button
-* look for the textarea
