@@ -10247,7 +10247,6 @@ inlineMarkdownEditor = function inlineMarkdownEditor(o) {
     options: o
   };
 }
-
 module.exports = inlineMarkdownEditor;
 
 },{"./buildSectionForm.js":94,"./defaultMarkdown.js":95,"./insertEditLink.js":97,"./isEditable.js":98,"./onComplete.js":99,"./onFail.js":100,"./processSections.js":102}],97:[function(require,module,exports){
@@ -10272,7 +10271,7 @@ module.exports = function isEditable(markdown) {
   var editable = markdown.match(/</) === null; // has tags; exclueds HTML
   editable = editable && markdown.match(/\*\*\*\*/) === null; // no horizontal rules: ****
   editable = editable && markdown.match(/\-\-\-\-/) === null; // no horizontal rules: ----
-  editable = editable && markdown === ''; // no blanks
+  editable = editable && markdown !== ''; // no blanks
 // also add no pure whitespace
   return editable;
 } 
