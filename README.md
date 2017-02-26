@@ -14,9 +14,9 @@ Upon submitting the form, an asynchronous AJAX post request is made to the speci
 
 For a demo, see:
 
-https://publiclab.github.io/examples/inline-markdown-editor
-
-https://publiclab.github.io/examples/inline-markdown-editor/wysiwyg
+https://publiclab.github.io/inline-markdown-editor/examples/
+                                                           
+https://publiclab.github.io/inline-markdown-editor/examples/wysiwyg
 
 
 ## Usage
