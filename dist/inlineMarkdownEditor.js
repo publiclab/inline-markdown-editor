@@ -10182,150 +10182,8 @@ module.exports = function buildSectionForm(uniqueId, contents) {
 }
 
 },{}],95:[function(require,module,exports){
-inlineMarkdownEditor = function inlineMarkdownEditor(o) {
-  var el = $(o.selector);
-  // split by double-newline:
-  var sections = el.html().split('\n\n');
-  el.html('');
-  var processSections = require('./processSections.js');
-  processSections(sections, {
-    replaceUrl:    o.replaceUrl,
-    selector:      o.selector,
-    preProcessor:  o.preProcessor,
-    postProcessor: o.postProcessor
-  });
-  el.show();
-}
-
-module.exports = inlineMarkdownEditor;
-
-},{"./processSections.js":98}],96:[function(require,module,exports){
-module.exports = function insertEditLink(uniqueId, el, form, onEdit, editor) {
-  var editBtns = "";
-  editBtns += "<span class='inline-edit-btns inline-edit-btns-" + uniqueId + "'>";
-  editBtns +=   "<a class='inline-edit-btn inline-edit-link inline-edit-link-" + uniqueId + "'><i class='fa fa-pencil'></i></a>";
-  // editBtns +=   "<a class='inline-edit-btn inline-edit-image inline-edit-image-" + uniqueId + "'><i class='fa fa-image'></i></a>";
-  editBtns +=   "<i>Edit</i>";
-  editBtns += "</span>";
-  el.append(editBtns);
-  $('.inline-edit-link-' + uniqueId).click(function inlineEditLinkClick(e) {
-    e.preventDefault();
-    form.toggle();
-    if (onEdit) {
-      if (document.hasOwnProperty('PL') && $('#' + uniqueId).find('.wk-container').length === 0) {
-        // insert rich editor
-        editor = new PL.Editor({
-          textarea: $('#' + uniqueId + ' textarea')[0]
-        });
-      }
-      onEdit(editor); // send it back for later use
-    }
-  });
-}
-
-},{}],97:[function(require,module,exports){
-module.exports = function processSection(markdown, o) {
-  var html,
-      randomNum   = parseInt(Math.random() * 10000),
-      uniqueId    = "section-form-" + randomNum,
-      filteredMarkdown = markdown,
-      replaceWithMarkdown = require('./replaceWithMarkdown.js'),
-      buildSectionForm    = require('./buildSectionForm.js'),
-      insertEditLink      = require('./insertEditLink.js');
-
-  if (o.preProcessor) filteredMarkdown = o.preProcessor(markdown);
-  html = replaceWithMarkdown(filteredMarkdown);
-
-  $(o.selector).append('<div class="inline-section inline-section-' + uniqueId + '"></div>');
-  var el = $(o.selector).find('.inline-section:last');
-  el.append(html);
-
-  if (o.postProcessor) o.postProcessor(el);
-  var form = insertFormIfMarkdown(filteredMarkdown, el, uniqueId);
-
-  var message = $('#' + uniqueId + ' .section-message');
-
-  function insertFormIfMarkdown(_markdown, el, uniqueId) {
-    // filter? Only p,h1-5,ul?
-    var isMarkdown = _markdown.match(/</) === null; // has tags
-        isMarkdown = isMarkdown && _markdown.match(/\*\*\*\*/) === null; // no horizontal rules
- 
-    if (isMarkdown) {
-      var formHtml = buildSectionForm(uniqueId, _markdown);
-      el.after(formHtml);
-      var form = $('#' + uniqueId);
-      insertEditLink(uniqueId, el, form, onEdit);
-
-      // we get the rich editor back in the onEdit callback:
-      function onEdit(editor) {
-        form.find('.cancel').click(function inlineEditCancelClick(e) {
-          e.preventDefault();
-          form.hide();
-        });
-        form.find('button.submit').click(function(e) {
-          submitSectionForm(e, form, editor)
-        });
-      }
-    }
- 
-    function submitSectionForm(e, form, editor) {
-      e.preventDefault();
-      message.html('<i class="fa fa-spinner fa-spin" style="color:#ccc;"></i>');
-      if (editor) {
-        changes = editor.richTextModule.value(); // rich editor
-      } else {
-        changes = form.find('textarea').val();
-      }
-      $.post(o.replaceUrl, {
-        before: markdown,
-        after: changes
-      })
-      .done(onComplete)
-      .error(onFail)
-      .fail(onFail); // these don't work?
-
-      function onComplete(response) {
-        if (response === 'true' || response === true) {
-          message.html('<i class="fa fa-check" style="color:green;"></i>');
-          markdown = changes;
-          $('#' + uniqueId + ' textarea').val('');
-          form.hide();
-          // replace the section but reset our html and markdown
-          html = replaceWithMarkdown(markdown);
-          el.html(html);
-          insertEditLink(uniqueId, el, form);
-          if (o.postProcessor) o.postProcessor(el); // add #hashtag and @callout links, extra CSS and deep links
-        } else {
-          message.html('<b style="color:#a33">There was an error</b> -- the wiki page may have changed while you were editing; save your content in the clipboard and try refreshing the page.');
-        }
-      }
-  
-      function onFail(response) {
-        var message = $('#' + uniqueId + ' .prompt-message');
-        message.html('There was an error -- the wiki page may have changed while you were editing; save your content in the clipboard and try refreshing the page.');
-      }
-    }
-
-    return form;
-  }
-}
-
-},{"./buildSectionForm.js":94,"./insertEditLink.js":96,"./replaceWithMarkdown.js":99}],98:[function(require,module,exports){
-module.exports = function processSections(sections, o) {
-  sections.forEach(function(markdown) {
-    processSection = require('./processSection.js');
-    processSection(markdown, {
-      replaceUrl:    o.replaceUrl,
-      selector:      o.selector, 
-      postProcessor: o.postProcessor,
-      preProcessor:  o.preProcessor
-    });
-  });
-}
-
-},{"./processSection.js":97}],99:[function(require,module,exports){
 // Runs megamark with default whitelist
-module.exports = function replaceWithMarkdown(element) {
+module.exports = function defaultMarkdown(element) {
   var html = require('megamark')(
     element,
     { 
@@ -10351,23 +10209,170 @@ module.exports = function replaceWithMarkdown(element) {
       }
     }
   );
+  function addCallouts(html) {
+    var pattern = /(^|\s)@([A-z\_]+)\b/g;
+    return html.replace(pattern, function replaceCallouts(m, p1, p2) {
+      return p1 + '<a href="/profile/' + p2 + '">@' + p2 + '</a>';
+    });
+  }
+  function addHashtags(html) {
+    var pattern = /(^|\s)#([A-z\-]+)\b/g;
+    return html.replace(pattern, function replaceHashtags(m, p1, p2) {
+      return p1 + '<a href="/tag/' + p2 + '">#' + p2 + '</a>';
+    });
+  }
   html = addCallouts(html);
   html = addHashtags(html);
   return html;
 }
 
-function addCallouts(html) {
-  var pattern = /(^|\s)@([A-z\_]+)\b/g;
-  return html.replace(pattern, function replaceCallouts(m, p1, p2) {
-    return p1 + '<a href="/profile/' + p2 + '">@' + p2 + '</a>';
+},{"megamark":3}],96:[function(require,module,exports){
+inlineMarkdownEditor = function inlineMarkdownEditor(o) {
+  o.defaultMarkdown = o.defaultMarkdown || require('./defaultMarkdown.js');
+  o.buildSectionForm = o.buildSectionForm || require('./buildSectionForm.js');
+  o.insertEditLink = o.insertEditLink || require('./insertEditLink.js');
+  o.onComplete = o.onComplete || require('./onComplete.js');
+  o.onFail = o.onFail || require('./onFail.js');
+  o.isEditable = o.isEditable || require('./isEditable.js');
+  o.processSections = require('./processSections.js');
+  var el = $(o.selector);
+  // split by double-newline:
+  var sections = el.html().split('\n\n');
+  el.html('');
+  o.processSections(sections, o);
+  el.show();
+  return {
+    element: el,
+    sections: sections,
+    options: o
+  };
+}
+module.exports = inlineMarkdownEditor;
+
+},{"./buildSectionForm.js":94,"./defaultMarkdown.js":95,"./insertEditLink.js":97,"./isEditable.js":98,"./onComplete.js":99,"./onFail.js":100,"./processSections.js":102}],97:[function(require,module,exports){
+module.exports = function insertEditLink(uniqueId, el, form, onEdit, editor) {
+  var editBtns = "";
+  editBtns += "<span class='inline-edit-btns inline-edit-btns-" + uniqueId + "'>";
+  editBtns +=   "<a class='inline-edit-btn inline-edit-link inline-edit-link-" + uniqueId + "'><i class='fa fa-pencil'></i></a>";
+  // editBtns +=   "<a class='inline-edit-btn inline-edit-image inline-edit-image-" + uniqueId + "'><i class='fa fa-image'></i></a>";
+  editBtns +=   "<i>Edit</i>";
+  editBtns += "</span>";
+  el.append(editBtns);
+  $('.inline-edit-link-' + uniqueId).click(function inlineEditLinkClick(e) {
+    e.preventDefault();
+    form.toggle();
+    if (onEdit) onEdit(); // callback
   });
 }
 
-function addHashtags(html) {
-  var pattern = /(^|\s)#([A-z\-]+)\b/g;
-  return html.replace(pattern, function replaceHashtags(m, p1, p2) {
-    return p1 + '<a href="/tag/' + p2 + '">#' + p2 + '</a>';
+},{}],98:[function(require,module,exports){
+module.exports = function isEditable(markdown) {
+  // filter? Only p,h1-5,ul?
+  var editable = markdown.match(/</) === null; // has tags; exclueds HTML
+  editable = editable && markdown.match(/\*\*\*\*/) === null; // no horizontal rules: ****
+  editable = editable && markdown.match(/\-\-\-\-/) === null; // no horizontal rules: ----
+  editable = editable && markdown !== ''; // no blanks
+  return editable;
+} 
+
+},{}],99:[function(require,module,exports){
+module.exports = function onComplete(response, markdown, html, el, uniqueId, form, o) {
+  if (response === 'true' || response === true) {
+    message.html('<i class="fa fa-check" style="color:green;"></i>');
+    markdown = changes;
+    $('#' + uniqueId + ' textarea').val('');
+    form.hide();
+    // replace the section but reset our html and markdown
+    html = o.defaultMarkdown(markdown);
+    el.html(html);
+    o.insertEditLink(uniqueId, el, form);
+    if (o.postProcessor) o.postProcessor(el); // add #hashtag and @callout links, extra CSS and deep links
+  } else {
+    message.html('<b style="color:#a33">There was an error</b> -- the wiki page may have changed while you were editing; save your content in the clipboard and try refreshing the page.');
+  }
+}
+
+},{}],100:[function(require,module,exports){
+module.exports = function onFail(response, uniqueId) {
+  var message = $('#' + uniqueId + ' .prompt-message');
+  message.html('There was an error -- the wiki page may have changed while you were editing; save your content in the clipboard and try refreshing the page.');
+}
+
+},{}],101:[function(require,module,exports){
+module.exports = function processSection(markdown, o) {
+  var html,
+      randomNum   = parseInt(Math.random() * 10000),
+      uniqueId    = "section-form-" + randomNum,
+      filteredMarkdown = markdown;
+
+  if (o.preProcessor) filteredMarkdown = o.preProcessor(markdown);
+  html = o.defaultMarkdown(filteredMarkdown);
+
+  $(o.selector).append('<div class="inline-section inline-section-' + uniqueId + '"></div>');
+  var el = $(o.selector).find('.inline-section:last');
+  el.append(html);
+
+  if (o.postProcessor) o.postProcessor(el);
+  var form = insertFormIfMarkdown(filteredMarkdown, el, uniqueId);
+
+  var message = $('#' + uniqueId + ' .section-message');
+
+  function insertFormIfMarkdown(_markdown, el, uniqueId) {
+    if (o.isEditable(_markdown)) {
+      var formHtml = o.buildSectionForm(uniqueId, _markdown);
+      el.after(formHtml);
+      var form = $('#' + uniqueId);
+      o.insertEditLink(uniqueId, el, form, onEdit);
+      function onEdit() {
+        if (o.wysiwyg && $('#' + uniqueId).find('.wk-container').length === 0) {
+          // insert rich editor
+          editor = new PL.Editor({
+            textarea: $('#' + uniqueId + ' textarea')[0]
+          });
+        }
+        form.find('.cancel').click(function inlineEditCancelClick(e) {
+          e.preventDefault();
+          form.hide();
+        });
+        form.find('button.submit').click(function(e) {
+          submitSectionForm(e, form, editor)
+        });
+      }
+    }
+ 
+    function submitSectionForm(e, form, _editor) {
+      e.preventDefault();
+      message.html('<i class="fa fa-spinner fa-spin" style="color:#ccc;"></i>');
+      if (_editor) {
+        changes = _editor.richTextModule.value(); // rich editor
+      } else {
+        changes = form.find('textarea').val();
+      }
+      // we should swap for a method like this:
+      //o.sendChanges(markdown, changes);
+      // but should do mocked ajax testing first
+      $.post(o.replaceUrl, {
+        before: markdown,
+        after: changes
+      })
+      .done(function onComplete(response) {
+        // we should need fewer things here:
+        o.onComplete(response, markdown, html, el, uniqueId, form, o);
+      }).error(function onFail(response) {
+        o.onFail(response, uniqueId);
+      }).fail(function onFail(response) {
+        o.onFail(response, uniqueId);
+      }); // these don't work?
+    }
+  }
+}
+
+},{}],102:[function(require,module,exports){
+module.exports = function processSections(sections, o) {
+  sections.forEach(function(markdown) {
+    processSection = require('./processSection.js');
+    processSection(markdown, o);
   });
 }
 
-},{"megamark":3}]},{},[95]);
+},{"./processSection.js":101}]},{},[96]);
