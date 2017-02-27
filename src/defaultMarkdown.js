@@ -26,13 +26,13 @@ module.exports = function defaultMarkdown(element) {
     }
   );
   function addCallouts(html) {
-    var pattern = /(^|\s)@([A-z\_]+)\b/g;
+    var pattern = /(^|\s|\<p\>)@([A-z\_]+)\b/g;
     return html.replace(pattern, function replaceCallouts(m, p1, p2) {
       return p1 + '<a href="/profile/' + p2 + '">@' + p2 + '</a>';
     });
   }
   function addHashtags(html) {
-    var pattern = /(^|\s)#([A-z\-]+)\b/g;
+    var pattern = /(^|\s|\<p\>)#([A-z\-]+)\b/g;
     return html.replace(pattern, function replaceHashtags(m, p1, p2) {
       return p1 + '<a href="/tag/' + p2 + '">#' + p2 + '</a>';
     });
