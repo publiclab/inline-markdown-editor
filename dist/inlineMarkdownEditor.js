@@ -10239,27 +10239,43 @@ inlineMarkdownEditor = function inlineMarkdownEditor(o) {
   o.originalMarkdown = el.html();
   // split by double-newline:
   var sections = o.originalMarkdown.split('\n\n');
+  var editableSections = [];
+  // we also do this inside processSection, but independently track here:
+  sections.forEach(function forEachSection(section, index) {
+    if (o.isEditable(section, o.originalMarkdown)) editableSections.push(section);
+  });
   el.html('');
+  // we might start running processSections only on editableSections...
   o.processSections(sections, o);
   el.show();
   return {
     element: el,
     sections: sections,
+    editableSections: editableSections,
     options: o
   };
 }
 module.exports = inlineMarkdownEditor;
 
 },{"./buildSectionForm.js":94,"./defaultMarkdown.js":95,"./insertEditLink.js":97,"./isEditable.js":98,"./onComplete.js":99,"./onFail.js":100,"./processSections.js":102}],97:[function(require,module,exports){
-module.exports = function insertEditLink(uniqueId, el, form, onEdit, editor) {
+module.exports = function insertEditLink(uniqueId, el, form, onEdit, editor, o) {
   var editBtns = "";
   editBtns += "<span class='inline-edit-btns inline-edit-btns-" + uniqueId + "'>";
-  editBtns +=   "<a class='inline-edit-btn inline-edit-link inline-edit-link-" + uniqueId + "'><i class='fa fa-pencil'></i></a>";
-  // editBtns +=   "<a class='inline-edit-btn inline-edit-image inline-edit-image-" + uniqueId + "'><i class='fa fa-image'></i></a>";
-  editBtns +=   "<i>Edit</i>";
+  editBtns +=   "<a class='inline-edit-btn inline-edit-btn-editor-" + uniqueId + " inline-edit-btn-" + uniqueId + "'><i class='fa fa-pencil'></i></a>";
+  if (o.extraButtons) {
+    Object.keys(o.extraButtons).forEach(function(key, index) {
+      editBtns +=   "<a class='inline-edit-btn inline-edit-btn-" + key + " inline-edit-btn-" + uniqueId + " inline-edit-btn-" + uniqueId + "-" + key + "'><i class='fa " + key + "'></i></a>";
+    });
+  }
   editBtns += "</span>";
   el.append(editBtns);
-  $('.inline-edit-link-' + uniqueId).click(function inlineEditLinkClick(e) {
+  if (o.extraButtons) {
+    Object.keys(o.extraButtons).forEach(function(key, index) {
+    // run respective functions and pass in the elements
+    o.extraButtons[key]($('.inline-edit-btn-' + uniqueId + '-' + key), uniqueId);
+    });
+  }
+  $('.inline-edit-btn-editor-' + uniqueId).click(function inlineEditLinkClick(e) {
     e.preventDefault();
     form.toggle();
     if (onEdit) onEdit(); // callback
@@ -10290,7 +10306,7 @@ module.exports = function onComplete(response, markdown, html, el, uniqueId, for
     // replace the section but reset our html and markdown
     html = o.defaultMarkdown(markdown);
     el.html(html);
-    o.insertEditLink(uniqueId, el, form);
+    o.insertEditLink(uniqueId, el, form, false, false, o);
     if (o.postProcessor) o.postProcessor(el); // add #hashtag and @callout links, extra CSS and deep links
   } else {
     message.html('<b style="color:#a33">There was an error</b> -- the wiki page may have changed while you were editing; save your content in the clipboard and try refreshing the page.');
@@ -10327,7 +10343,8 @@ module.exports = function processSection(markdown, o) {
       var formHtml = o.buildSectionForm(uniqueId, _markdown);
       el.after(formHtml);
       var form = $('#' + uniqueId);
-      o.insertEditLink(uniqueId, el, form, onEdit);
+      o.insertEditLink(uniqueId, el, form, onEdit, false, o);
+      // plan for swappable editors; will need to specify both constructor and onEditorSubmit
       function onEdit() {
         if (o.wysiwyg && $('#' + uniqueId).find('.wk-container').length === 0) {
           // insert rich editor

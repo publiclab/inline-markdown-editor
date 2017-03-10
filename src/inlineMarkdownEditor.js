@@ -10,12 +10,19 @@ inlineMarkdownEditor = function inlineMarkdownEditor(o) {
   o.originalMarkdown = el.html();
   // split by double-newline:
   var sections = o.originalMarkdown.split('\n\n');
+  var editableSections = [];
+  // we also do this inside processSection, but independently track here:
+  sections.forEach(function forEachSection(section, index) {
+    if (o.isEditable(section, o.originalMarkdown)) editableSections.push(section);
+  });
   el.html('');
+  // we might start running processSections only on editableSections...
   o.processSections(sections, o);
   el.show();
   return {
     element: el,
     sections: sections,
+    editableSections: editableSections,
     options: o
   };
 }

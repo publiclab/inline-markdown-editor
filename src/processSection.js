@@ -21,7 +21,8 @@ module.exports = function processSection(markdown, o) {
       var formHtml = o.buildSectionForm(uniqueId, _markdown);
       el.after(formHtml);
       var form = $('#' + uniqueId);
-      o.insertEditLink(uniqueId, el, form, onEdit);
+      o.insertEditLink(uniqueId, el, form, onEdit, false, o);
+      // plan for swappable editors; will need to specify both constructor and onEditorSubmit
       function onEdit() {
         if (o.wysiwyg && $('#' + uniqueId).find('.wk-container').length === 0) {
           // insert rich editor

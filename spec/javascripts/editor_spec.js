@@ -35,6 +35,7 @@ describe("Editor", function() {
     expect(editor.sections.length).toBe(6);
     expect($('.inline-section').length).toBe(6);
     expect(editor.sections[0]).toBe('');
+    expect(editor.editableSections.length).toBe(3);
     expect($('.inline-edit-form').length).toBe(3);
     expect($('.inline-edit-form textarea').length).toBe(3);
   });
