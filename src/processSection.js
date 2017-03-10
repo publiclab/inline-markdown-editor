@@ -17,7 +17,7 @@ module.exports = function processSection(markdown, o) {
   var message = $('#' + uniqueId + ' .section-message');
 
   function insertFormIfMarkdown(_markdown, el, uniqueId) {
-    if (o.isEditable(_markdown)) {
+    if (o.isEditable(_markdown, o.originalMarkdown)) {
       var formHtml = o.buildSectionForm(uniqueId, _markdown);
       el.after(formHtml);
       var form = $('#' + uniqueId);

@@ -10236,8 +10236,9 @@ inlineMarkdownEditor = function inlineMarkdownEditor(o) {
   o.isEditable = o.isEditable || require('./isEditable.js');
   o.processSections = require('./processSections.js');
   var el = $(o.selector);
+  o.originalMarkdown = el.html();
   // split by double-newline:
-  var sections = el.html().split('\n\n');
+  var sections = o.originalMarkdown.split('\n\n');
   el.html('');
   o.processSections(sections, o);
   el.show();
@@ -10266,18 +10267,22 @@ module.exports = function insertEditLink(uniqueId, el, form, onEdit, editor) {
 }
 
 },{}],98:[function(require,module,exports){
-module.exports = function isEditable(markdown) {
+module.exports = function isEditable(markdown, originalMarkdown) {
+  originalMarkdown = originalMarkdown || markdown; // optional parameter for checking against original complete text
   // filter? Only p,h1-5,ul?
   var editable = markdown.match(/</) === null; // has tags; exclueds HTML
   editable = editable && markdown.match(/\*\*\*\*/) === null; // no horizontal rules: ****
   editable = editable && markdown.match(/\-\-\-\-/) === null; // no horizontal rules: ----
   editable = editable && markdown !== ''; // no blanks
+  // here we disallow if more than one instance in original string:
+  editable = editable && originalMarkdown.split(markdown).length === 2 // couldn't get match options to work with string
   return editable;
 } 
 
 },{}],99:[function(require,module,exports){
 module.exports = function onComplete(response, markdown, html, el, uniqueId, form, o) {
   if (response === 'true' || response === true) {
+    var message = $('#' + uniqueId + ' .section-message');
     message.html('<i class="fa fa-check" style="color:green;"></i>');
     markdown = changes;
     $('#' + uniqueId + ' textarea').val('');
@@ -10318,7 +10323,7 @@ module.exports = function processSection(markdown, o) {
   var message = $('#' + uniqueId + ' .section-message');
 
   function insertFormIfMarkdown(_markdown, el, uniqueId) {
-    if (o.isEditable(_markdown)) {
+    if (o.isEditable(_markdown, o.originalMarkdown)) {
       var formHtml = o.buildSectionForm(uniqueId, _markdown);
       el.after(formHtml);
       var form = $('#' + uniqueId);

@@ -25,6 +25,12 @@ describe("Editor", function() {
     expect(isEditable('Just a simple string.')).toBe(true);
   });
 
+  it("correctly assesses isEditable when comparing to original full text; no duplicates", function() {
+    var isEditable = editor.options.isEditable
+    expect(isEditable('phrase', 'One phrase, two phrase.')).toBe(false);
+    expect(isEditable('One', 'One phrase, two phrase.')).toBe(true);
+  });
+
   it("generates the right number of sections", function() {
     expect(editor.sections.length).toBe(6);
     expect($('.inline-section').length).toBe(6);
