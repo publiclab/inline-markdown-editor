@@ -46,7 +46,8 @@ inlineMarkdownEditor({
   defaultMarkdown: function(markdown) {}, // a markdown parser
   buildSectionForm: function() {}, // return a string containing the form element
   onComplete: function(response, markdown, html, el, uniqueId, form, o) {}, // run on completing AJAX post
-  isEditable: function(markdown) {} // returns boolean; whether a given subsection should get an inline form; default skips HTML and horizontal rules
+  isEditable: function(markdown) {}, // returns boolean; whether a given subsection should get an inline form; default skips HTML and horizontal rules
+  extraButtons: { 'fa-icon-name': function(element) {} } // object with keys of icon names for additional buttons with associated actions for each; returns jQuery element upon construction
   
 });
 ```
@@ -68,6 +69,7 @@ Tests are set up with Jasmine, and can be run with `npm test`.
 ## Goals
 
 * configurable editors
+  * plan for swappable editors; will need to specify both constructor and onEditorSubmit in processSection
 * better modularization of processSection.js
 * more tests
 
