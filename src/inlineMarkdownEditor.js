@@ -7,8 +7,9 @@ inlineMarkdownEditor = function inlineMarkdownEditor(o) {
   o.isEditable = o.isEditable || require('./isEditable.js');
   o.processSections = require('./processSections.js');
   var el = $(o.selector);
+  o.originalMarkdown = el.html();
   // split by double-newline:
-  var sections = el.html().split('\n\n');
+  var sections = o.originalMarkdown.split('\n\n');
   el.html('');
   o.processSections(sections, o);
   el.show();
