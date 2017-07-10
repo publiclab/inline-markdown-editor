@@ -10346,6 +10346,7 @@ module.exports = function processSection(markdown, o) {
       o.insertEditLink(uniqueId, el, form, onEdit, false, o);
       // plan for swappable editors; will need to specify both constructor and onEditorSubmit
       function onEdit() {
+        var editor;
         if (o.wysiwyg && $('#' + uniqueId).find('.wk-container').length === 0) {
           // insert rich editor
           editor = new PL.Editor({
@@ -10357,25 +10358,27 @@ module.exports = function processSection(markdown, o) {
           form.hide();
         });
         form.find('button.submit').click(function(e) {
-          submitSectionForm(e, form, editor)
+          prepareAndSendSectionForm(e, form, editor, _markdown);
         });
       }
     }
- 
-    function submitSectionForm(e, form, _editor) {
-      e.preventDefault();
+
+    function prepareAndSendSectionForm(e, form, _editor, _markdown) {
       message.html('<i class="fa fa-spinner fa-spin" style="color:#ccc;"></i>');
       if (_editor) {
         changes = _editor.richTextModule.value(); // rich editor
       } else {
         changes = form.find('textarea').val();
       }
-      // we should swap for a method like this:
-      //o.sendChanges(markdown, changes);
-      // but should do mocked ajax testing first
+      o.submitSectionForm(e, _markdown, changes, o);
+    }
+
+    // provide overridable default 
+    o.submitSectionForm = o.submitSectionForm || function submitSectionForm(e, before, after, o) {
+      e.preventDefault();
       $.post(o.replaceUrl, {
-        before: markdown,
-        after: changes
+        before: before,
+        after: after
       })
       .done(function onComplete(response) {
         // we should need fewer things here:
