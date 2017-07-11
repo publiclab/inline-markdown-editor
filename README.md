@@ -47,7 +47,8 @@ inlineMarkdownEditor({
   buildSectionForm: function() {}, // return a string containing the form element
   onComplete: function(response, markdown, html, el, uniqueId, form, o) {}, // run on completing AJAX post
   isEditable: function(markdown) {}, // returns boolean; whether a given subsection should get an inline form; default skips HTML and horizontal rules
-  extraButtons: { 'fa-icon-name': function(element) {} } // object with keys of icon names for additional buttons with associated actions for each; returns jQuery element upon construction
+  extraButtons: { 'fa-icon-name': function(element) {} }, // object with keys of icon names for additional buttons with associated actions for each; returns jQuery element upon construction
+  submitSectionForm: function(event, before, after, options) {} // optional, to override the form submission handling for each subsection; before/after represent the text diff
   
 });
 ```
