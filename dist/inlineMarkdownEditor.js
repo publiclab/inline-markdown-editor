@@ -10377,8 +10377,8 @@ module.exports = function processSection(markdown, o) {
     o.submitSectionForm = o.submitSectionForm || function submitSectionForm(e, before, after, o) {
       e.preventDefault();
       $.post(o.replaceUrl, {
-        before: before,
-        after: after
+        before: before, // encodeURI(before)
+        after: after // encodeURI(after)
       })
       .done(function onComplete(response) {
         // we should need fewer things here:
