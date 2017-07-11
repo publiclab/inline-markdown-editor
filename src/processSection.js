@@ -20,8 +20,8 @@ module.exports = function processSection(markdown, o) {
     if (o.isEditable(_markdown, o.originalMarkdown)) {
       var formHtml = o.buildSectionForm(uniqueId, _markdown);
       el.after(formHtml);
-      var form = $('#' + uniqueId);
-      o.insertEditLink(uniqueId, el, form, onEdit, false, o);
+      var _form = $('#' + uniqueId);
+      o.insertEditLink(uniqueId, el, _form, onEdit, false, o);
       // plan for swappable editors; will need to specify both constructor and onEditorSubmit
       function onEdit() {
         var editor;
@@ -31,28 +31,29 @@ module.exports = function processSection(markdown, o) {
             textarea: $('#' + uniqueId + ' textarea')[0]
           });
         }
-        form.find('.cancel').click(function inlineEditCancelClick(e) {
+        _form.find('.cancel').click(function inlineEditCancelClick(e) {
           e.preventDefault();
-          form.hide();
+          _form.hide();
         });
-        form.find('button.submit').click(function(e) {
-          prepareAndSendSectionForm(e, form, editor, _markdown);
+        _form.find('button.submit').click(function(e) {
+          prepareAndSendSectionForm(e, _form, editor, _markdown);
         });
       }
     }
 
-    function prepareAndSendSectionForm(e, form, _editor, _markdown) {
+    function prepareAndSendSectionForm(e, __form, _editor, _markdown) {
       message.html('<i class="fa fa-spinner fa-spin" style="color:#ccc;"></i>');
       if (_editor) {
         changes = _editor.richTextModule.value(); // rich editor
       } else {
-        changes = form.find('textarea').val();
+        changes = __form.find('textarea').val();
       }
-      o.submitSectionForm(e, _markdown, changes, o);
+      o.submitSectionForm(e, _markdown, changes, o, el, __form);
     }
 
-    // provide overridable default 
-    o.submitSectionForm = o.submitSectionForm || function submitSectionForm(e, before, after, o) {
+    // provide overridable default; though we have to explicitly pass in
+    // all this stuff so the section forms don't get crossed 
+    o.submitSectionForm = o.submitSectionForm || function submitSectionForm(e, before, after, o, _el, __form) {
       e.preventDefault();
       $.post(o.replaceUrl, {
         before: before, // encodeURI(before)
@@ -60,12 +61,14 @@ module.exports = function processSection(markdown, o) {
       })
       .done(function onComplete(response) {
         // we should need fewer things here:
-        o.onComplete(response, markdown, html, el, uniqueId, form, o);
+        o.onComplete(response, after, html, _el, uniqueId, __form, o);
       }).error(function onFail(response) {
         o.onFail(response, uniqueId);
       }).fail(function onFail(response) {
         o.onFail(response, uniqueId);
       }); // these don't work?
     }
+
+    return _form;
   }
 }
