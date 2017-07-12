@@ -2,7 +2,7 @@ module.exports = function onComplete(response, markdown, html, el, uniqueId, for
   if (response === 'true' || response === true) {
     var message = $('#' + uniqueId + ' .section-message');
     message.html('<i class="fa fa-check" style="color:green;"></i>');
-    markdown = changes;
+    //markdown = changes;
     $('#' + uniqueId + ' textarea').val('');
     form.hide();
     // replace the section but reset our html and markdown
