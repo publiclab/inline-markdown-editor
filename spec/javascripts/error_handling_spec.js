@@ -1,11 +1,9 @@
 describe('error handling by onFail', function () {
   
-  var editor, request;
+  var editor, html = "A simple text line";
 
   beforeEach(function() {
-    spyOn($, "ajax");
     fixture = loadFixtures('index.html');
-    var html = "A simple text line";
     $('.markdown').html(html);
     editor = inlineMarkdownEditor({
       replaceUrl: '/wiki/replace/',
@@ -13,39 +11,24 @@ describe('error handling by onFail', function () {
     });
   });
 
-  var responses = {
-    success: {
-      status: 200,
-      responseText: "Success!",
-    },
-    failure: {
-      status: 404,
-      responseText: "Not found",
-    },
-    server_error: {
-      status:500,
-      responseTtext: "Internal server error",
-    }
-  };
+  it("should call onFail", function(){
+    jasmine.Ajax.install();
 
-  it('should build only one section Form', function(){
-    expect($('.inline-edit-form').length).toBe(1);
-  });
+    spyOn(editor.options, "onComplete");
+    spyOn(editor.options, "onFail");
 
-  it("should make an Ajax request to the correct URL", function() {
-    expect(true).toBe(true);
-    var form_text = $('.inline-edit-form textarea').val("A simple text line changed");
-    expect($('.inline-edit-form textarea').val()).toBe("A simple text line changed");
+    spyOn($, "post").and.callFake(function(options) {
+      //here options is /wiki/replace/  
+      var d = $.Deferred();
+      d.reject("this is the response");     
+      return d.promise();
+    });
   
+    $('.inline-edit-btn').click(); // generate editor by clicking the pencil icon
+    $('.inline-edit-form button.submit').click(); //click the save button in that form to send the post request
 
-    spyEvent = spyOnEvent('.submit', 'click');
-    $('.submit').trigger("click");
-    expect($('.submit').length).toBe(1);
-    expect('click').toHaveBeenTriggeredOn('.submit');
-    expect(spyEvent).toHaveBeenTriggered();
-
-    //expect($.ajax.mostRecentCall).not.toBeUndefined();
-
+    expect(editor.options.onComplete).not.toHaveBeenCalled();
+    expect(editor.options.onFail).toHaveBeenCalled();
   });
   
 })
