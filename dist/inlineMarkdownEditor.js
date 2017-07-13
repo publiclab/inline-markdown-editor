@@ -10386,8 +10386,6 @@ module.exports = function processSection(markdown, o) {
       .done(function onComplete(response) {
         // we should need fewer things here:
         o.onComplete(response, after, html, _el, uniqueId, __form, o);
-      }).error(function onFail(response) {
-        o.onFail(response, uniqueId);
       }).fail(function onFail(response) {
         o.onFail(response, uniqueId);
       }); // these don't work?
