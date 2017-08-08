@@ -37,19 +37,19 @@ inlineMarkdownEditor({
   replaceUrl: '/wiki/replace/' + wiki_id,
   selector: '.markdown',
   preProcessor: function preProcessMarkdown(markdown) {
-    // do things to markdown here
+    // do things to markdown here before it's used to construct the form
     return markdown
   },
   postProcessor: function postProcessContent(element) {
-    // do things to element here
+    // do things to element here after the section has been converted to HTML and displayed
   },
   defaultMarkdown: function(markdown) {}, // a markdown parser
   buildSectionForm: function() {}, // return a string containing the form element
   onComplete: function(response, markdown, html, el, uniqueId, form, o) {}, // run on completing AJAX post
   isEditable: function(markdown) {}, // returns boolean; whether a given subsection should get an inline form; default skips HTML and horizontal rules
   extraButtons: { 'fa-icon-name': function(element) {} }, // object with keys of icon names for additional buttons with associated actions for each; returns jQuery element upon construction
-  submitSectionForm: function(event, before, after, options) {} // optional, to override the form submission handling for each subsection; before/after represent the text diff
-  
+  submitSectionForm: function(event, before, after, options) {}, // optional, to override the form submission handling for each subsection; before/after represent the text diff
+  editorOptions: {} // any options to pass to the built-in PublicLab.Editor instance
 });
 ```
 

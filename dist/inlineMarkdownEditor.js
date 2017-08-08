@@ -10237,6 +10237,7 @@ inlineMarkdownEditor = function inlineMarkdownEditor(o) {
   o.processSections = require('./processSections.js');
   var el = $(o.selector);
   o.originalMarkdown = el.html();
+  o.preProcessor = o.preProcessor || function(m) { return m; }
   // split by double-newline:
   var sections = o.originalMarkdown
                   .replace(/\n[\n]+/g, "\n\n")
@@ -10244,7 +10245,7 @@ inlineMarkdownEditor = function inlineMarkdownEditor(o) {
   var editableSections = [];
   // we also do this inside processSection, but independently track here:
   sections.forEach(function forEachSection(section, index) {
-    if (o.isEditable(section, o.originalMarkdown)) editableSections.push(section);
+    if (o.isEditable(section, o.preProcessor(o.originalMarkdown))) editableSections.push(section);
   });
   el.html('');
   // we might start running processSections only on editableSections...
@@ -10299,8 +10300,8 @@ module.exports = function isEditable(markdown, originalMarkdown) {
 
 },{}],99:[function(require,module,exports){
 module.exports = function onComplete(response, markdown, html, el, uniqueId, form, o) {
+  var message = form.find('.section-message');
   if (response === 'true' || response === true) {
-    var message = $('#' + uniqueId + ' .section-message');
     message.html('<i class="fa fa-check" style="color:green;"></i>');
     //markdown = changes;
     $('#' + uniqueId + ' textarea').val('');
@@ -10328,7 +10329,8 @@ module.exports = function processSection(markdown, o) {
       uniqueId    = "section-form-" + randomNum,
       filteredMarkdown = markdown;
 
-  if (o.preProcessor) filteredMarkdown = o.preProcessor(markdown);
+  var originalSectionMarkdown = markdown;
+  filteredMarkdown = o.preProcessor(markdown);
   html = o.defaultMarkdown(filteredMarkdown);
 
   $(o.selector).append('<div class="inline-section inline-section-' + uniqueId + '"></div>');
@@ -10341,7 +10343,7 @@ module.exports = function processSection(markdown, o) {
   var message = $('#' + uniqueId + ' .section-message');
 
   function insertFormIfMarkdown(_markdown, el, uniqueId) {
-    if (o.isEditable(_markdown, o.originalMarkdown)) {
+    if (o.isEditable(_markdown, o.preProcessor(o.originalMarkdown))) {
       var formHtml = o.buildSectionForm(uniqueId, _markdown);
       el.after(formHtml);
       var _form = $('#' + uniqueId);
@@ -10351,16 +10353,16 @@ module.exports = function processSection(markdown, o) {
         var editor;
         if (o.wysiwyg && $('#' + uniqueId).find('.wk-container').length === 0) {
           // insert rich editor
-          editor = new PL.Editor({
-            textarea: $('#' + uniqueId + ' textarea')[0]
-          });
+          var editorOptions = o.editorOptions || {};
+          editorOptions.textarea = $('#' + uniqueId + ' textarea')[0];
+          editor = new PL.Editor(editorOptions);
         }
         _form.find('.cancel').click(function inlineEditCancelClick(e) {
           e.preventDefault();
           _form.hide();
         });
         _form.find('button.submit').click(function(e) {
-          prepareAndSendSectionForm(e, _form, editor, _markdown);
+          prepareAndSendSectionForm(e, _form, editor, originalSectionMarkdown);
         });
       }
     }
