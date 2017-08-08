@@ -10329,6 +10329,7 @@ module.exports = function processSection(markdown, o) {
       filteredMarkdown = markdown;
 
   o.preProcessor = o.preProcessor || function(m) { return m; }
+  var originalSectionMarkdown = markdown;
   filteredMarkdown = o.preProcessor(markdown);
   html = o.defaultMarkdown(filteredMarkdown);
 
@@ -10361,7 +10362,7 @@ module.exports = function processSection(markdown, o) {
           _form.hide();
         });
         _form.find('button.submit').click(function(e) {
-          prepareAndSendSectionForm(e, _form, editor, o.originalMarkdown);
+          prepareAndSendSectionForm(e, _form, editor, originalSectionMarkdown);
         });
       }
     }
