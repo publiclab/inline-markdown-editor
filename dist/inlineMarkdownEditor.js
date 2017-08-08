@@ -10299,7 +10299,7 @@ module.exports = function isEditable(markdown, originalMarkdown) {
 
 },{}],99:[function(require,module,exports){
 module.exports = function onComplete(response, markdown, html, el, uniqueId, form, o) {
-  var message = $('#' + uniqueId + ' .section-message');
+  var message = form.find('.section-message');
   if (response === 'true' || response === true) {
     message.html('<i class="fa fa-check" style="color:green;"></i>');
     //markdown = changes;
