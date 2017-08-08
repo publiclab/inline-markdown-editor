@@ -1,6 +1,6 @@
 module.exports = function onComplete(response, markdown, html, el, uniqueId, form, o) {
+  var message = $('#' + uniqueId + ' .section-message');
   if (response === 'true' || response === true) {
-    var message = $('#' + uniqueId + ' .section-message');
     message.html('<i class="fa fa-check" style="color:green;"></i>');
     //markdown = changes;
     $('#' + uniqueId + ' textarea').val('');
