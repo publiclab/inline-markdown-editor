@@ -10237,6 +10237,7 @@ inlineMarkdownEditor = function inlineMarkdownEditor(o) {
   o.processSections = require('./processSections.js');
   var el = $(o.selector);
   o.originalMarkdown = el.html();
+  o.preProcessor = o.preProcessor || function(m) { return m; }
   // split by double-newline:
   var sections = o.originalMarkdown
                   .replace(/\n[\n]+/g, "\n\n")
@@ -10244,7 +10245,7 @@ inlineMarkdownEditor = function inlineMarkdownEditor(o) {
   var editableSections = [];
   // we also do this inside processSection, but independently track here:
   sections.forEach(function forEachSection(section, index) {
-    if (o.isEditable(section, o.originalMarkdown)) editableSections.push(section);
+    if (o.isEditable(section, o.preProcessor(o.originalMarkdown))) editableSections.push(section);
   });
   el.html('');
   // we might start running processSections only on editableSections...
@@ -10328,7 +10329,6 @@ module.exports = function processSection(markdown, o) {
       uniqueId    = "section-form-" + randomNum,
       filteredMarkdown = markdown;
 
-  o.preProcessor = o.preProcessor || function(m) { return m; }
   var originalSectionMarkdown = markdown;
   filteredMarkdown = o.preProcessor(markdown);
   html = o.defaultMarkdown(filteredMarkdown);

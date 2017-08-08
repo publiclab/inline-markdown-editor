@@ -4,7 +4,6 @@ module.exports = function processSection(markdown, o) {
       uniqueId    = "section-form-" + randomNum,
       filteredMarkdown = markdown;
 
-  o.preProcessor = o.preProcessor || function(m) { return m; }
   var originalSectionMarkdown = markdown;
   filteredMarkdown = o.preProcessor(markdown);
   html = o.defaultMarkdown(filteredMarkdown);
