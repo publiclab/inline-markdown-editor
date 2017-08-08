@@ -10353,9 +10353,9 @@ module.exports = function processSection(markdown, o) {
         var editor;
         if (o.wysiwyg && $('#' + uniqueId).find('.wk-container').length === 0) {
           // insert rich editor
-          editor = new PL.Editor({
-            textarea: $('#' + uniqueId + ' textarea')[0]
-          });
+          var editorOptions = o.editorOptions || {};
+          editorOptions.textarea = $('#' + uniqueId + ' textarea')[0];
+          editor = new PL.Editor(editorOptions);
         }
         _form.find('.cancel').click(function inlineEditCancelClick(e) {
           e.preventDefault();
