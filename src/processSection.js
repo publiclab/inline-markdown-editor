@@ -4,7 +4,8 @@ module.exports = function processSection(markdown, o) {
       uniqueId    = "section-form-" + randomNum,
       filteredMarkdown = markdown;
 
-  if (o.preProcessor) filteredMarkdown = o.preProcessor(markdown);
+  o.preProcessor = o.preProcessor || function(m) { return m; }
+  filteredMarkdown = o.preProcessor(markdown);
   html = o.defaultMarkdown(filteredMarkdown);
 
   $(o.selector).append('<div class="inline-section inline-section-' + uniqueId + '"></div>');
@@ -17,7 +18,7 @@ module.exports = function processSection(markdown, o) {
   var message = $('#' + uniqueId + ' .section-message');
 
   function insertFormIfMarkdown(_markdown, el, uniqueId) {
-    if (o.isEditable(_markdown, o.originalMarkdown)) {
+    if (o.isEditable(_markdown, o.preProcessor(o.originalMarkdown))) {
       var formHtml = o.buildSectionForm(uniqueId, _markdown);
       el.after(formHtml);
       var _form = $('#' + uniqueId);
@@ -36,7 +37,7 @@ module.exports = function processSection(markdown, o) {
           _form.hide();
         });
         _form.find('button.submit').click(function(e) {
-          prepareAndSendSectionForm(e, _form, editor, _markdown);
+          prepareAndSendSectionForm(e, _form, editor, o.originalMarkdown);
         });
       }
     }

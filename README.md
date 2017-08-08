@@ -37,11 +37,11 @@ inlineMarkdownEditor({
   replaceUrl: '/wiki/replace/' + wiki_id,
   selector: '.markdown',
   preProcessor: function preProcessMarkdown(markdown) {
-    // do things to markdown here
+    // do things to markdown here before it's used to construct the form
     return markdown
   },
   postProcessor: function postProcessContent(element) {
-    // do things to element here
+    // do things to element here after the section has been converted to HTML and displayed
   },
   defaultMarkdown: function(markdown) {}, // a markdown parser
   buildSectionForm: function() {}, // return a string containing the form element
