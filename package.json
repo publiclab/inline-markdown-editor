@@ -26,7 +26,7 @@
     "megamark": "^3.2.2",
     "publiclab-editor": "~0.2.0",
     "font-awesome": "~4.7.0",
-    "bootstrap": "~3.2.0",
+    "bootstrap": "~3.4.0",
     "jquery": "~3"
   },
   "devDependencies": {
