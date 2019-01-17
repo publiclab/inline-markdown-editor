@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "megamark": "^3.2.2",
-    "publiclab-editor": "~1.3.3",
+    "publiclab-editor": "~1.4.0",
     "font-awesome": "~4.7.0",
     "bootstrap": "~3.4.0",
     "jquery": "~3"
