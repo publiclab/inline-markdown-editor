@@ -45,12 +45,10 @@ module.exports = function processSection(markdown, o) {
     }
 
     function prepareAndSendSectionForm(e, __form, _editor, _markdown) {
-      message.html('<i class="fa fa-spinner fa-spin" style="color:#ccc;"></i>');
-      if (_editor) {
-        changes = _editor.richTextModule.value(); // rich editor
-      } else {
-        changes = __form.find("textarea").val();
-      }
+      message.html('<i class="fa fa-spinner fa-spin" style="color:#000;"></i>');
+      changes = _editor
+        ? _editor.richTextModule.value()
+        : __form.find("textarea").val();
       o.submitSectionForm(e, _markdown, changes, o, el, __form);
     }
 
@@ -60,19 +58,32 @@ module.exports = function processSection(markdown, o) {
       o.submitSectionForm ||
       function submitSectionForm(e, before, after, o, _el, __form) {
         e.preventDefault();
-        before !== after //reduce unwanted traffic
+        before !== after
           ? (function() {
-              $.post(o.replaceUrl, {
-                before: before, // encodeURI(before)
-                after: after // encodeURI(after)
+              var req = $.ajax({
+                data: {
+                  before: before, // encodeURI(before)
+                  after: after // encodeURI(after)
+                },
+                type: "POST",
+                url: o.replaceUrl
               })
-                .done(function onComplete(response) {
-                  // we should need fewer things here:
-                  o.onComplete(response, after, html, _el, uniqueId, __form, o);
+                .done(function(result, success, xhr) {
+                  o.onComplete(
+                    //cutdown excess parameters here
+                    xhr.status,
+                    after,
+                    html,
+                    _el,
+                    uniqueId,
+                    __form,
+                    o
+                  );
                 })
-                .fail(function onFail(response) {
-                  o.onFail(response, uniqueId);
-                }); // these don't work?
+                .catch(function(error) { //won't execute
+                  message.empty();
+                  o.onFail(error, uniqueId);
+                });
             })()
           : alert("Please make some edits first.");
       };
