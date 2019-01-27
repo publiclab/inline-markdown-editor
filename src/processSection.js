@@ -68,7 +68,7 @@ module.exports = function processSection(markdown, o) {
                 type: "POST",
                 url: o.replaceUrl
               })
-                .done(function(result, success, xhr) {
+                .done(function onComplete(result, success, xhr) {
                   o.onComplete(
                     //cutdown excess parameters here
                     xhr.status,
@@ -80,7 +80,7 @@ module.exports = function processSection(markdown, o) {
                     o
                   );
                 })
-                .catch(function(error) { //won't execute
+                .fail(function onFail(error) { //won't execute
                   message.empty();
                   o.onFail(error, uniqueId);
                 });
