@@ -60,7 +60,7 @@ module.exports = function processSection(markdown, o) {
         e.preventDefault();
         before !== after
           ? (function() {
-              var req = $.ajax({
+              $.ajax({
                 data: {
                   before: before, // encodeURI(before)
                   after: after // encodeURI(after)
