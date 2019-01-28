@@ -1,3 +1,4 @@
+
 module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-browserify');
@@ -5,6 +6,13 @@ module.exports = function(grunt) {
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
     grunt.initConfig({
+
+      connect: {
+        test : {
+          port : 8000,
+          base: 'test'
+        }
+      },
 
       pkg: grunt.file.readJSON('package.json'),
 
@@ -55,6 +63,10 @@ module.exports = function(grunt) {
         'browserify:dist'
     ]);
 
+    grunt.registerTask('test', ['connect', 'jasmine']);
+
     grunt.loadNpmTasks('grunt-contrib-jasmine');
+
+    grunt.loadNpmTasks('grunt-contrib-connect');
 
 };
