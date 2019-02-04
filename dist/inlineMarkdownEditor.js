@@ -10168,14 +10168,14 @@ module.exports = slug;
 module.exports = function buildSectionForm(uniqueId, contents) {
   var formHtml = "<form style='display:none;' class='well inline-edit-form' id='" + uniqueId + "'>";
   formHtml += "<p><b>Edit this section:</b></p>";
-  formHtml += "<p><textarea rows='6' class='form-control'>" 
+  formHtml += "<p><textarea rows='6' class='form-control'>"
   formHtml += contents + "</textarea></p>";
 
   formHtml += "<p class='controls'>";
-  formHtml += "<button type='submit' class='btn btn-primary submit'>Save</button> ";
+  formHtml += "<button type='submit' class='btn btn-primary submit'>Save</button>";
 
-  formHtml += "&nbsp; <a class='cancel'>cancel</a>";
-  formHtml += "<small style='color:#aaa;'><i> | <span class='section-message'>In-line editing only works with basic content. Content may require page refresh.</span></i></small>";
+  formHtml += "&nbsp; <a class='cancel btn btn-danger'>Cancel</a>";
+  formHtml += "<small style='color:#aaa;'><i>&nbsp;&nbsp;<span class='section-message'>In-line editing only works with basic content. Content may require page refresh.</span></i></small>";
   formHtml += "</p>";
   formHtml += "</form>";
   return formHtml;
@@ -10228,26 +10228,29 @@ module.exports = function defaultMarkdown(element) {
 
 },{"megamark":91}],96:[function(require,module,exports){
 inlineMarkdownEditor = function inlineMarkdownEditor(o) {
-  o.defaultMarkdown = o.defaultMarkdown || require('./defaultMarkdown.js');
-  o.buildSectionForm = o.buildSectionForm || require('./buildSectionForm.js');
-  o.insertEditLink = o.insertEditLink || require('./insertEditLink.js');
-  o.onComplete = o.onComplete || require('./onComplete.js');
-  o.onFail = o.onFail || require('./onFail.js');
-  o.isEditable = o.isEditable || require('./isEditable.js');
-  o.processSections = require('./processSections.js');
+  o.defaultMarkdown = o.defaultMarkdown || require("./defaultMarkdown.js");
+  o.buildSectionForm = o.buildSectionForm || require("./buildSectionForm.js");
+  o.insertEditLink = o.insertEditLink || require("./insertEditLink.js");
+  o.onComplete = o.onComplete || require("./onComplete.js");
+  o.onFail = o.onFail || require("./onFail.js");
+  o.isEditable = o.isEditable || require("./isEditable.js");
+  o.processSections = require("./processSections.js");
   var el = $(o.selector);
   o.originalMarkdown = el.html();
-  o.preProcessor = o.preProcessor || function(m) { return m; }
+  o.preProcessor =
+    o.preProcessor ||
+    function(m) {
+      return m;
+    };
   // split by double-newline:
-  var sections = o.originalMarkdown
-                  .replace(/\n[\n]+/g, "\n\n")
-                  .split('\n\n');
+  var sections = o.originalMarkdown.replace(/[\n]{2,}/g, "\n\n").split("\n\n");
   var editableSections = [];
   // we also do this inside processSection, but independently track here:
   sections.forEach(function forEachSection(section, index) {
-    if (o.isEditable(section, o.preProcessor(o.originalMarkdown))) editableSections.push(section);
+    if (o.isEditable(section, o.preProcessor(o.originalMarkdown)))
+      editableSections.push(section);
   });
-  el.html('');
+  el.html("");
   // we might start running processSections only on editableSections...
   o.processSections(sections, o);
   el.show();
@@ -10257,7 +10260,7 @@ inlineMarkdownEditor = function inlineMarkdownEditor(o) {
     editableSections: editableSections,
     options: o
   };
-}
+};
 module.exports = inlineMarkdownEditor;
 
 },{"./buildSectionForm.js":94,"./defaultMarkdown.js":95,"./insertEditLink.js":97,"./isEditable.js":98,"./onComplete.js":99,"./onFail.js":100,"./processSections.js":102}],97:[function(require,module,exports){
@@ -10299,12 +10302,20 @@ module.exports = function isEditable(markdown, originalMarkdown) {
 } 
 
 },{}],99:[function(require,module,exports){
-module.exports = function onComplete(response, markdown, html, el, uniqueId, form, o) {
-  var message = form.find('.section-message');
-  if (response === 'true' || response === true) {
+module.exports = function onComplete(
+  response,
+  markdown,
+  html,
+  el,
+  uniqueId,
+  form,
+  o
+) {
+  var message = form.find(".section-message");
+  if (response === 200) {
     message.html('<i class="fa fa-check" style="color:green;"></i>');
     //markdown = changes;
-    $('#' + uniqueId + ' textarea').val('');
+    $("#" + uniqueId + " textarea").val("");
     form.hide();
     // replace the section but reset our html and markdown
     html = o.defaultMarkdown(markdown);
@@ -10312,90 +10323,112 @@ module.exports = function onComplete(response, markdown, html, el, uniqueId, for
     o.insertEditLink(uniqueId, el, form, false, false, o);
     if (o.postProcessor) o.postProcessor(el); // add #hashtag and @callout links, extra CSS and deep links
   } else {
-    message.html('<b style="color:#a33">There was an error</b> -- the wiki page may have changed while you were editing; save your content in the clipboard and try refreshing the page.');
+    message.html(
+      '<b style="color:#a33">There was an error</b> -- the wiki page may have changed while you were editing; save your content in the clipboard and try refreshing the page.'
+    );
   }
-}
+};
 
 },{}],100:[function(require,module,exports){
-module.exports = function onFail(response, uniqueId) {
-  var message = $('#' + uniqueId + ' .section-message');
-  message.html('There was an error -- the wiki page may have changed while you were editing; save your content in the clipboard and try refreshing the page.');
-}
+module.exports = function onFail(error, uniqueId) {
+  var message = $("#" + uniqueId + " .section-message");
+  message.html(error);
+};
 
 },{}],101:[function(require,module,exports){
 module.exports = function processSection(markdown, o) {
   var html,
-      randomNum   = parseInt(Math.random() * 10000),
-      uniqueId    = "section-form-" + randomNum,
-      filteredMarkdown = markdown;
+    randomNum = parseInt(Math.random() * 10000),
+    uniqueId = "section-form-" + randomNum,
+    filteredMarkdown = markdown;
 
   var originalSectionMarkdown = markdown;
   filteredMarkdown = o.preProcessor(markdown);
   html = o.defaultMarkdown(filteredMarkdown);
 
-  $(o.selector).append('<div class="inline-section inline-section-' + uniqueId + '"></div>');
-  var el = $(o.selector).find('.inline-section:last');
+  $(o.selector).append(
+    '<div class="inline-section inline-section-' + uniqueId + '"></div>'
+  );
+  var el = $(o.selector).find(".inline-section:last");
   el.append(html);
 
   if (o.postProcessor) o.postProcessor(el);
   var form = insertFormIfMarkdown(filteredMarkdown, el, uniqueId);
 
-  var message = $('#' + uniqueId + ' .section-message');
+  var message = $("#" + uniqueId + " .section-message");
 
   function insertFormIfMarkdown(_markdown, el, uniqueId) {
     if (o.isEditable(_markdown, o.preProcessor(o.originalMarkdown))) {
       var formHtml = o.buildSectionForm(uniqueId, _markdown);
       el.after(formHtml);
-      var _form = $('#' + uniqueId);
+      var _form = $("#" + uniqueId);
       o.insertEditLink(uniqueId, el, _form, onEdit, false, o);
       // plan for swappable editors; will need to specify both constructor and onEditorSubmit
       function onEdit() {
         var editor;
-        if (o.wysiwyg && $('#' + uniqueId).find('.wk-container').length === 0) {
+        if (o.wysiwyg && $("#" + uniqueId).find(".wk-container").length === 0) {
           // insert rich editor
           var editorOptions = o.editorOptions || {};
-          editorOptions.textarea = $('#' + uniqueId + ' textarea')[0];
+          editorOptions.textarea = $("#" + uniqueId + " textarea")[0];
           editor = new PL.Editor(editorOptions);
         }
-        _form.find('.cancel').click(function inlineEditCancelClick(e) {
+        _form.find(".cancel").click(function inlineEditCancelClick(e) {
           e.preventDefault();
           _form.hide();
         });
-        _form.find('button.submit').click(function(e) {
+        _form.find("button.submit").click(function(e) {
           prepareAndSendSectionForm(e, _form, editor, originalSectionMarkdown);
         });
       }
     }
 
     function prepareAndSendSectionForm(e, __form, _editor, _markdown) {
-      message.html('<i class="fa fa-spinner fa-spin" style="color:#ccc;"></i>');
-      if (_editor) {
-        changes = _editor.richTextModule.value(); // rich editor
-      } else {
-        changes = __form.find('textarea').val();
-      }
+      message.html('<i class="fa fa-spinner fa-spin" style="color:#000;"></i>');
+      changes = _editor
+        ? _editor.richTextModule.value()
+        : __form.find("textarea").val();
       o.submitSectionForm(e, _markdown, changes, o, el, __form);
     }
 
     // provide overridable default; though we have to explicitly pass in
-    // all this stuff so the section forms don't get crossed 
-    o.submitSectionForm = o.submitSectionForm || function submitSectionForm(e, before, after, o, _el, __form) {
-      e.preventDefault();
-      $.post(o.replaceUrl, {
-        before: before, // encodeURI(before)
-        after: after // encodeURI(after)
-      })
-      .done(function onComplete(response) {
-        // we should need fewer things here:
-        o.onComplete(response, after, html, _el, uniqueId, __form, o);
-      }).fail(function onFail(response) {
-        o.onFail(response, uniqueId);
-      }); // these don't work?
-    }
+    // all this stuff so the section forms don't get crossed
+    o.submitSectionForm =
+      o.submitSectionForm ||
+      function submitSectionForm(e, before, after, o, _el, __form) {
+        e.preventDefault();
+        before !== after
+          ? (function() {
+              $.ajax({
+                data: {
+                  before: before, // encodeURI(before)
+                  after: after // encodeURI(after)
+                },
+                type: "POST",
+                url: o.replaceUrl
+              })
+                .done(function onComplete(result, success, xhr) {
+                  o.onComplete(
+                    //cutdown excess parameters here
+                    xhr.status,
+                    after,
+                    html,
+                    _el,
+                    uniqueId,
+                    __form,
+                    o
+                  );
+                })
+                .fail(function onFail(error) { //won't execute
+                  message.empty();
+                  o.onFail(error, uniqueId);
+                });
+            })()
+          : alert("Please make some edits first.");
+      };
 
     return _form;
   }
-}
+};
 
 },{}],102:[function(require,module,exports){
 module.exports = function processSections(sections, o) {
