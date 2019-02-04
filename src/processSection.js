@@ -44,25 +44,21 @@ module.exports = function processSection(markdown, o) {
 
     function prepareAndSendSectionForm(e, __form, _editor, _markdown) {
       message.html('<i class="fa fa-spinner fa-spin" style="color:#ccc;"></i>');
-      if (_editor) {
-        changes = _editor.richTextModule.value(); // rich editor
-      } else {
-        changes = __form.find('textarea').val();
-      }
+      changes = _editor ? _editor.richTextModule.value() : __form.find("textarea").val();
       o.submitSectionForm(e, _markdown, changes, o, el, __form);
     }
 
     // provide overridable default; though we have to explicitly pass in
-    // all this stuff so the section forms don't get crossed 
+    // all this stuff so the section forms don't get crossed
     o.submitSectionForm = o.submitSectionForm || function submitSectionForm(e, before, after, o, _el, __form) {
       e.preventDefault();
       $.post(o.replaceUrl, {
         before: before, // encodeURI(before)
         after: after // encodeURI(after)
       })
-      .done(function onComplete(response) {
+      .done(function onComplete(result, success, xhr) {
         // we should need fewer things here:
-        o.onComplete(response, after, html, _el, uniqueId, __form, o);
+        o.onComplete(xhr.status, after, html, _el, uniqueId, __form, o);
       }).fail(function onFail(response) {
         o.onFail(response, uniqueId);
       }); // these don't work?

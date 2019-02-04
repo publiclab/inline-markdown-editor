@@ -10,9 +10,7 @@ inlineMarkdownEditor = function inlineMarkdownEditor(o) {
   o.originalMarkdown = el.html();
   o.preProcessor = o.preProcessor || function(m) { return m; }
   // split by double-newline:
-  var sections = o.originalMarkdown
-                  .replace(/\n[\n]+/g, "\n\n")
-                  .split('\n\n');
+  var sections = o.originalMarkdown.replace(/[\n]{2,}/g, "\n\n").split("\n\n");
   var editableSections = [];
   // we also do this inside processSection, but independently track here:
   sections.forEach(function forEachSection(section, index) {
