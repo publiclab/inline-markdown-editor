@@ -10398,13 +10398,9 @@ module.exports = function processSection(markdown, o) {
         e.preventDefault();
         before !== after
           ? (function() {
-              $.ajax({
-                data: {
-                  before: before, // encodeURI(before)
-                  after: after // encodeURI(after)
-                },
-                type: "POST",
-                url: o.replaceUrl
+              $.post(o.replaceUrl, {
+                before: before, // encodeURI(before)
+                after: after // encodeURI(after)
               })
                 .done(function onComplete(result, success, xhr) {
                   o.onComplete(
@@ -10418,7 +10414,8 @@ module.exports = function processSection(markdown, o) {
                     o
                   );
                 })
-                .fail(function onFail(error) { //won't execute
+                .fail(function onFail(error) {
+                  //won't execute
                   message.empty();
                   o.onFail(error, uniqueId);
                 });

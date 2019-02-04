@@ -17,7 +17,7 @@ describe('error handling by onFail', function () {
     spyOn(editor.options, "onComplete");
     spyOn(editor.options, "onFail");
 
-    spyOn($, "ajax").and.callFake(function(options) {
+    spyOn($, "post").and.callFake(function(options) {
       //here options is /wiki/replace/
       var d = $.Deferred();
       d.reject("this is the response");
