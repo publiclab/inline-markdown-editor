@@ -10168,14 +10168,14 @@ module.exports = slug;
 module.exports = function buildSectionForm(uniqueId, contents) {
   var formHtml = "<form style='display:none;' class='well inline-edit-form' id='" + uniqueId + "'>";
   formHtml += "<p><b>Edit this section:</b></p>";
-  formHtml += "<p><textarea rows='6' class='form-control'>" 
+  formHtml += "<p><textarea rows='6' class='form-control'>"
   formHtml += contents + "</textarea></p>";
 
   formHtml += "<p class='controls'>";
   formHtml += "<button type='submit' class='btn btn-primary submit'>Save</button> ";
 
-  formHtml += "&nbsp; <a class='cancel'>cancel</a>";
-  formHtml += "<small style='color:#aaa;'><i> | <span class='section-message'>In-line editing only works with basic content. Content may require page refresh.</span></i></small>";
+  formHtml += "&nbsp; <a class='cancel btn btn-danger'>Cancel</a>";
+  formHtml += "<small style='color:#000;'><i>&nbsp;&nbsp;<span class='section-message'>In-line editing only works with basic content. Content may require page refresh.</span></i></small>";
   formHtml += "</p>";
   formHtml += "</form>";
   return formHtml;
@@ -10239,9 +10239,7 @@ inlineMarkdownEditor = function inlineMarkdownEditor(o) {
   o.originalMarkdown = el.html();
   o.preProcessor = o.preProcessor || function(m) { return m; }
   // split by double-newline:
-  var sections = o.originalMarkdown
-                  .replace(/\n[\n]+/g, "\n\n")
-                  .split('\n\n');
+  var sections = o.originalMarkdown.replace(/[\n]{2,}/g, "\n\n").split("\n\n");
   var editableSections = [];
   // we also do this inside processSection, but independently track here:
   sections.forEach(function forEachSection(section, index) {
@@ -10301,7 +10299,7 @@ module.exports = function isEditable(markdown, originalMarkdown) {
 },{}],99:[function(require,module,exports){
 module.exports = function onComplete(response, markdown, html, el, uniqueId, form, o) {
   var message = form.find('.section-message');
-  if (response === 'true' || response === true) {
+  if (response === 200) {
     message.html('<i class="fa fa-check" style="color:green;"></i>');
     //markdown = changes;
     $('#' + uniqueId + ' textarea').val('');
@@ -10369,25 +10367,21 @@ module.exports = function processSection(markdown, o) {
 
     function prepareAndSendSectionForm(e, __form, _editor, _markdown) {
       message.html('<i class="fa fa-spinner fa-spin" style="color:#ccc;"></i>');
-      if (_editor) {
-        changes = _editor.richTextModule.value(); // rich editor
-      } else {
-        changes = __form.find('textarea').val();
-      }
+      changes = _editor ? _editor.richTextModule.value() : __form.find("textarea").val();
       o.submitSectionForm(e, _markdown, changes, o, el, __form);
     }
 
     // provide overridable default; though we have to explicitly pass in
-    // all this stuff so the section forms don't get crossed 
+    // all this stuff so the section forms don't get crossed
     o.submitSectionForm = o.submitSectionForm || function submitSectionForm(e, before, after, o, _el, __form) {
       e.preventDefault();
       $.post(o.replaceUrl, {
         before: before, // encodeURI(before)
         after: after // encodeURI(after)
       })
-      .done(function onComplete(response) {
+      .done(function onComplete(result, success, xhr) {
         // we should need fewer things here:
-        o.onComplete(response, after, html, _el, uniqueId, __form, o);
+        o.onComplete(xhr.status, after, html, _el, uniqueId, __form, o);
       }).fail(function onFail(response) {
         o.onFail(response, uniqueId);
       }); // these don't work?
