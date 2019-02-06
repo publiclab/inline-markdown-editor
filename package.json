@@ -1,6 +1,6 @@
 {
   "name": "inline-markdown-editor",
-  "version": "0.3.0",
+  "version": "0.3.2",
   "description": "An inline wysiwyg markdown document editor based on replacing string subsections. WYSIWYG possible via woofmark.",
   "main": "dist/inlineMarkdownEditor.js",
   "scripts": {
@@ -27,7 +27,7 @@
     "font-awesome": "~4.7.0",
     "jquery": "~3",
     "megamark": "^3.2.2",
-    "publiclab-editor": "~1.4.0"
+    "publiclab-editor": "^1.4.0"
   },
   "devDependencies": {
     "browserify": "16.2.3",
