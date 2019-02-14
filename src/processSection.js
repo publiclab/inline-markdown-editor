@@ -30,6 +30,7 @@ module.exports = function processSection(markdown, o) {
           // insert rich editor
           var editorOptions = o.editorOptions || {};
           editorOptions.textarea = $('#' + uniqueId + ' textarea')[0];
+          editorOptions.tagsModule = (editorOptions.tagsModule === true); // disable this to not require Bloodhound, unless overridden
           editor = new PL.Editor(editorOptions);
         }
         _form.find('.cancel').click(function inlineEditCancelClick(e) {
