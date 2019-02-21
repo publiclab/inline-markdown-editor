@@ -14,7 +14,7 @@ module.exports = function divideIntoSections(content) {
     if (chunk.nodeName === "#text") {
       sections.concat(chunk.split("\n\n")); // split by double newline and add
     } else {
-      sections.push(chunk); // it's an HTML chunk
+      sections.push(chunk.toString()); // it's an HTML chunk
     }
   });
 

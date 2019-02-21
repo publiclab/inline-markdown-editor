@@ -13,7 +13,7 @@ describe("Replacement functions", function() {
 
   it("it correctly splits up mixed HTML and markdown into sections", function(done) {
     fixture = loadFixtures('index.html');
-    var html = "<div>lala</div>\n\nhey<table class='hey'><p><table></table></p></table>\n\n## Markdown\n\n<p>Hi there</p>\n\n* One\n* Two"
+    var html = "<div>lala</div>\n\nhey<table class='hey'><p><table></table></p></table>\n\n## Markdown\n\n<p>Hi there</p>\n\n* One\n* Two";
     $('.markdown').html(html);
 
     var editor = inlineMarkdownEditor({
