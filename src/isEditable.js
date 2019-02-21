@@ -1,7 +1,7 @@
 module.exports = function isEditable(markdown, originalMarkdown) {
   originalMarkdown = originalMarkdown || markdown; // optional parameter for checking against original complete text
   // filter? Only p,h1-5,ul?
-  var editable = markdown.match(/</) === null; // has tags; exclueds HTML
+  var editable = markdown.match(/</) === null; // has tags; excludes HTML
   editable = editable && markdown.match(/\*\*\*\*/) === null; // no horizontal rules: ****
   editable = editable && markdown.match(/\-\-\-\-/) === null; // no horizontal rules: ----
   editable = editable && markdown !== ''; // no blanks

@@ -10227,6 +10227,32 @@ module.exports = function defaultMarkdown(element) {
 }
 
 },{"megamark":91}],96:[function(require,module,exports){
+// split by double-newline, but preserve HTML blocks as single sections:
+module.exports = function divideIntoSections(content) {
+  var sections = [];
+  content = content.replace(/[\n]{2,}/g, "\n\n"); // manage double newlines (not sure exactly?)
+
+  // somehow split by <el>...</el> blocks... we can't use regex for that, we have to parse HTML
+  // then parse the markdown between it
+
+  // If we don't do this, it'll fail if there are double newlines inside HTML blocks, esp. <script> blocks
+
+  // test string: s = "<div>lala</div>\n\nhey<table class='hey'><p><table></table></p></table>\n\n## Markdown\n\n<p>Hi there</p>\n\n* One\n* Two"
+
+  var jqueryCollection = $(content);
+
+  jqueryCollection.toArray().forEach(function(chunk) {
+//    if (chunk.nodeName === "#text") {
+      sections += chunk.split("\n\n"); // split by double newline and add
+//    } else {
+//      sections.push(chunk); // it's an HTML chunk
+//    }
+  });
+
+  return sections;
+}
+
+},{}],97:[function(require,module,exports){
 inlineMarkdownEditor = function inlineMarkdownEditor(o) {
   o.defaultMarkdown = o.defaultMarkdown || require('./defaultMarkdown.js');
   o.buildSectionForm = o.buildSectionForm || require('./buildSectionForm.js');
@@ -10239,7 +10265,8 @@ inlineMarkdownEditor = function inlineMarkdownEditor(o) {
   o.originalMarkdown = el.html();
   o.preProcessor = o.preProcessor || function(m) { return m; }
   // split by double-newline:
-  var sections = o.originalMarkdown.replace(/[\n]{2,}/g, "\n\n").split("\n\n");
+  o.divideIntoSections = o.divideIntoSections || require('./divideIntoSections.js');
+  var sections = o.divideIntoSections(o.originalMarkdown);
   var editableSections = [];
   // we also do this inside processSection, but independently track here:
   sections.forEach(function forEachSection(section, index) {
@@ -10258,7 +10285,7 @@ inlineMarkdownEditor = function inlineMarkdownEditor(o) {
 }
 module.exports = inlineMarkdownEditor;
 
-},{"./buildSectionForm.js":94,"./defaultMarkdown.js":95,"./insertEditLink.js":97,"./isEditable.js":98,"./onComplete.js":99,"./onFail.js":100,"./processSections.js":102}],97:[function(require,module,exports){
+},{"./buildSectionForm.js":94,"./defaultMarkdown.js":95,"./divideIntoSections.js":96,"./insertEditLink.js":98,"./isEditable.js":99,"./onComplete.js":100,"./onFail.js":101,"./processSections.js":103}],98:[function(require,module,exports){
 module.exports = function insertEditLink(uniqueId, el, form, onEdit, editor, o) {
   var editBtns = "";
   editBtns += "<span class='inline-edit-btns inline-edit-btns-" + uniqueId + "'>";
@@ -10283,11 +10310,11 @@ module.exports = function insertEditLink(uniqueId, el, form, onEdit, editor, o) 
   });
 }
 
-},{}],98:[function(require,module,exports){
+},{}],99:[function(require,module,exports){
 module.exports = function isEditable(markdown, originalMarkdown) {
   originalMarkdown = originalMarkdown || markdown; // optional parameter for checking against original complete text
   // filter? Only p,h1-5,ul?
-  var editable = markdown.match(/</) === null; // has tags; exclueds HTML
+  var editable = markdown.match(/</) === null; // has tags; excludes HTML
   editable = editable && markdown.match(/\*\*\*\*/) === null; // no horizontal rules: ****
   editable = editable && markdown.match(/\-\-\-\-/) === null; // no horizontal rules: ----
   editable = editable && markdown !== ''; // no blanks
@@ -10296,7 +10323,7 @@ module.exports = function isEditable(markdown, originalMarkdown) {
   return editable;
 } 
 
-},{}],99:[function(require,module,exports){
+},{}],100:[function(require,module,exports){
 module.exports = function onComplete(response, markdown, html, el, uniqueId, form, o) {
   var message = form.find('.section-message');
   if (response === 200) {
@@ -10314,13 +10341,13 @@ module.exports = function onComplete(response, markdown, html, el, uniqueId, for
   }
 }
 
-},{}],100:[function(require,module,exports){
+},{}],101:[function(require,module,exports){
 module.exports = function onFail(response, uniqueId) {
   var message = $('#' + uniqueId + ' .section-message');
   message.html('There was an error -- the wiki page may have changed while you were editing; save your content in the clipboard and try refreshing the page.');
 }
 
-},{}],101:[function(require,module,exports){
+},{}],102:[function(require,module,exports){
 module.exports = function processSection(markdown, o) {
   var html,
       randomNum   = parseInt(Math.random() * 10000),
@@ -10396,7 +10423,7 @@ module.exports = function processSection(markdown, o) {
   }
 }
 
-},{}],102:[function(require,module,exports){
+},{}],103:[function(require,module,exports){
 module.exports = function processSections(sections, o) {
   sections.forEach(function(markdown) {
     processSection = require('./processSection.js');
@@ -10404,4 +10431,4 @@ module.exports = function processSections(sections, o) {
   });
 }
 
-},{"./processSection.js":101}]},{},[96]);
+},{"./processSection.js":102}]},{},[97]);

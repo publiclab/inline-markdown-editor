@@ -11,6 +11,19 @@ describe("Replacement functions", function() {
     expect($('.inline-edit-form textarea').length).toBe(1);
   });
 
+  it("it correctly splits up mixed HTML and markdown into sections", function(done) {
+    fixture = loadFixtures('index.html');
+    var html = "<div>lala</div>\n\nhey<table class='hey'><p><table></table></p></table>\n\n## Markdown\n\n<p>Hi there</p>\n\n* One\n* Two"
+    $('.markdown').html(html);
+
+    var editor = inlineMarkdownEditor({
+      replaceUrl: '/wiki/replace/',
+      selector: '.markdown'
+    });
+    expect($('.inline-edit-btn').toArray().length).toBe(5);
+    done();
+  });
+
   it("sends exactly matching original text and 'before' parameters", function(done) {
     fixture = loadFixtures('index.html');
     var html     = "## Headings [with](/links)";
