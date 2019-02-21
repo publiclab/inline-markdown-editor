@@ -58,8 +58,12 @@ module.exports = function processSection(markdown, o) {
         after: after // encodeURI(after)
       })
       .done(function onComplete(result, success, xhr) {
-        // we should need fewer things here:
-        o.onComplete(xhr.status, after, html, _el, uniqueId, __form, o);
+        if (result == "false") {
+          o.onFail(response, uniqueId);
+        } else {
+          // we should need fewer things here:
+          o.onComplete(xhr.status, after, html, _el, uniqueId, __form, o);
+        }
       }).fail(function onFail(response) {
         o.onFail(response, uniqueId);
       }); // these don't work?
