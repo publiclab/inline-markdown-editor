@@ -20,7 +20,8 @@ describe("Replacement functions", function() {
       replaceUrl: '/wiki/replace/',
       selector: '.markdown'
     });
-    expect($('.inline-edit-btn').toArray().length).toBe(5);
+    expect($('.inline-section').toArray().length).toBe(5);
+    expect($('.inline-edit-btn').toArray().length).toBe(2);
     done();
   });
 
