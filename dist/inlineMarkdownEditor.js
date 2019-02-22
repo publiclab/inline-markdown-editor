@@ -10245,15 +10245,12 @@ module.exports = function divideIntoSections(content) {
   var chunkArray = jqueryCollection.toArray().slice(1, jqueryCollection.length-1);
 
   chunkArray.forEach(function(chunk) {
-console.log(chunk)
     if (chunk.nodeName === "#text") {
-      sections.concat(chunk.split("\n\n")); // split by double newline and add
+      sections = sections.concat(chunk.textContent.split("\n\n")); // split by double newline and add
     } else {
-      sections.push(chunk.toString()); // it's an HTML chunk
+      sections.push(chunk.outerHTML); // it's an HTML chunk
     }
   });
-
-      sections = content.split("\n\n"); // split by double newline and add
 
   return sections;
 }
