@@ -8,15 +8,23 @@ module.exports = function divideIntoSections(content) {
 
   // test string: s = "<div>lala</div>\n\nhey<table class='hey'><p><table></table></p></table>\n\n## Markdown\n\n<p>Hi there</p>\n\n* One\n* Two"
 
+  // temporarily add extra start/end elements, or jquery can't parse the text elements in between
+  var content = "<br />" + content + "<br />";
   var jqueryCollection = $(content);
 
-  jqueryCollection.toArray().forEach(function(chunk) {
+  // pick off the first and last elements
+  var chunkArray = jqueryCollection.toArray().slice(1, jqueryCollection.length-1);
+
+  chunkArray.forEach(function(chunk) {
+console.log(chunk)
     if (chunk.nodeName === "#text") {
       sections.concat(chunk.split("\n\n")); // split by double newline and add
     } else {
       sections.push(chunk.toString()); // it's an HTML chunk
     }
   });
+
+      sections = content.split("\n\n"); // split by double newline and add
 
   return sections;
 }
