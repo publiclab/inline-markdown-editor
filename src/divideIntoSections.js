@@ -24,7 +24,7 @@ module.exports = function divideIntoSections(content) {
   });
 
   sections = sections.filter(function (x) {
-    return (x != null || x!="");
+    return (x != null || x != "" || x.match(/\S/) !== nil);
   });
 
   return sections;
