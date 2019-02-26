@@ -42,7 +42,7 @@ describe('error handling by onFail', function () {
     spyOn($, "post").and.callFake(function(options) {
       //here options is /wiki/replace/  
       var d = $.Deferred();
-      d.then("false").done(); 
+      d.then("false").fail(); 
       return d.promise();
     });
   
