@@ -59,7 +59,7 @@ module.exports = function processSection(markdown, o) {
       })
       .done(function onComplete(result, success, xhr) {
         if (result == "false") {
-          o.onFail(response, uniqueId);
+          o.onFail(result, uniqueId);
         } else {
           // we should need fewer things here:
           o.onComplete(xhr.status, after, html, _el, uniqueId, __form, o);

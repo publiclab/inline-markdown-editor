@@ -42,13 +42,14 @@ describe('error handling by onFail', function () {
     spyOn($, "post").and.callFake(function(options) {
       //here options is /wiki/replace/  
       var d = $.Deferred();
-      d.then("false").fail(); 
+      d.resolve("false"); 
       return d.promise();
     });
   
     $('.inline-edit-btn').click(); // generate editor by clicking the pencil icon
     $('.inline-edit-form button.submit').click(); //click the save button in that form to send the post request
 
+    // here, because of src/processSection.js#61, onFail should be called from within onComplete when it detects a response of "false"
     expect(editor.options.onComplete).not.toHaveBeenCalled();
     expect(editor.options.onFail).toHaveBeenCalled();
   });

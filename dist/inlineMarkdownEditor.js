@@ -10232,29 +10232,30 @@ module.exports = function divideIntoSections(content) {
   var sections = [];
   content = content.replace(/[\n]{2,}/g, "\n\n"); // manage double newlines (not sure exactly?)
 
-  // Split by <el>...</el> blocks, then parse the markdown text between it.
-  // If we don't do this, it'll fail if there are double newlines inside HTML blocks, esp. <script> blocks.
-
   // test string: s = "<div>lala</div>\n\nhey<table class='hey'><p><table></table></p></table>\n\n## Markdown\n\n<p>Hi there</p>\n\n* One\n* Two"
 
-  // temporarily add extra start/end elements, or jquery can't parse the text elements in between
-  var content = "<br />" + content + "<br />";
-  var jqueryCollection = $(content);
+  chunkArray = content.split(/[\n\n]|<\w.>?<\/\w.>/);
+  // `s.split(/[\n\n]|<\w.>?<\/\w.>/)` isn't perfect - it probably fails on HTML across multiple lines. But... maybe progress...
 
-  // pick off the first and last elements
-  var chunkArray = jqueryCollection.toArray().slice(1, jqueryCollection.length-1);
+  // actually, we have to split by <el>...</el> blocks, then parse the markdown text between it.
+  // If we don't do this, it'll fail if there are double newlines inside HTML blocks, esp. <script> blocks.
+
+  chunkArray = chunkArray.filter(function (x) {
+    return (x !== undefined && x !== '' && x.match(/\S/) !== null); // probably overzealous filtering of "empty" sections
+  });
+
+console.log('chunkArray',chunkArray.toString())
 
   chunkArray.forEach(function(chunk) {
-    if (chunk.nodeName === "#text") {
-      sections = sections.concat(chunk.textContent.split("\n\n")); // split by double newline and add
+    if (chunk.match(/<\w>/)) {
+      sections.push(chunk); // it's an HTML chunk
     } else {
-      sections.push(chunk.outerHTML); // it's an HTML chunk
+      sections = sections.concat(chunk.split("\n\n")); // split by double newline and add
     }
   });
 
-  sections = sections.filter(function (x) {
-    return (x != null || x != "" || x.match(/\S/) !== nil);
-  });
+console.log('postfilter')
+console.log(sections.toString())
 
   return sections;
 }
@@ -10416,7 +10417,7 @@ module.exports = function processSection(markdown, o) {
       })
       .done(function onComplete(result, success, xhr) {
         if (result == "false") {
-          o.onFail(response, uniqueId);
+          o.onFail(result, uniqueId);
         } else {
           // we should need fewer things here:
           o.onComplete(xhr.status, after, html, _el, uniqueId, __form, o);

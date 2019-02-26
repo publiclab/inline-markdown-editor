@@ -14,14 +14,18 @@ describe("Replacement functions", function() {
   it("it correctly splits up mixed HTML and markdown into sections", function(done) {
     fixture = loadFixtures('index.html');
     var html = "<div>lala</div>\n\nhey<table class='hey'><p><table></table></p></table>\n\n## Markdown\n\n<p>Hi there</p>\n\n* One\n* Two";
+    // note that <table>s here are improperly nested but we still want to treat them as a section
+
     $('.markdown').html(html);
 
     var editor = inlineMarkdownEditor({
       replaceUrl: '/wiki/replace/',
       selector: '.markdown'
     });
+
+    expect(editor.sections.length).toBe(5);
     expect($('.inline-section').toArray().length).toBe(5);
-    expect($('.inline-edit-btn').toArray().length).toBe(2);
+    expect($('.inline-edit-btn').toArray().length).toBe(2); // two should be editable
     done();
   });
 
