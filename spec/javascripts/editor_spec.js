@@ -32,23 +32,21 @@ describe("Editor", function() {
   });
 
   it("generates the right number of sections", function() {
-    expect(editor.sections.length).toBe(8);
-    expect($('.inline-section').length).toBe(8);
-    expect(editor.sections[0]).toBe('');
+    expect(editor.sections.length).toBe(6);
+    expect($('.inline-section').length).toBe(6);
+    expect(editor.sections[0]).toBe('### Hello, World');
     expect(editor.editableSections.length).toBe(5);
     expect($('.inline-edit-form').length).toBe(5);
     expect($('.inline-edit-form textarea').length).toBe(5);
   });
 
   it("correctly splits up sections", function() {
-    expect(editor.sections[0]).toBe("");
-    expect(editor.sections[1]).toBe("### Hello, World");
-    expect(editor.sections[2]).toBe("This is a paragraph.");
-    expect(editor.sections[3]).toBe("* this\n* is\n* a\n* list");
-    expect(editor.sections[4]).toBe("****");
-    expect(editor.sections[5]).toBe("### Hello again, World");
-    expect(editor.sections[6]).toBe("### Hello finally");
-    expect(editor.sections[7]).toBe("");
+    expect(editor.sections[0]).toBe("### Hello, World");
+    expect(editor.sections[1]).toBe("This is a paragraph.");
+    expect(editor.sections[2]).toBe("* this\n* is\n* a\n* list");
+    expect(editor.sections[3]).toBe("****");
+    expect(editor.sections[4]).toBe("### Hello again, World");
+    expect(editor.sections[5]).toBe("### Hello finally");
   });
 
 });

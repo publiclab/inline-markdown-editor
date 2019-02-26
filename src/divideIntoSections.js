@@ -4,11 +4,9 @@ module.exports = function divideIntoSections(content) {
   content = content.replace(/[\n]{2,}/g, "\n\n"); // manage double newlines (not sure exactly?)
   chunkArray = content.replace(/(<(.+).*>.+<\/\2>)/g,"@@@@@@$1").split(/@@@@@@|\n\n/);
 
-  // ok, but now so 'hey' is split from the html.
-
-//  chunkArray = chunkArray.filter(function (x) {
-//    return (x !== undefined && x !== '' && x.match(/\S/) !== null); // probably overzealous filtering of "empty" sections
-//  });
+  chunkArray = chunkArray.filter(function (x) {
+    return (x !== undefined && x !== '' && x.match(/\S/) !== null); // probably overzealous filtering of "empty" sections
+  });
 
   chunkArray.forEach(function(chunk) {
     if (chunk.match(/<\w>/)) {

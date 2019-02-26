@@ -23,8 +23,10 @@ describe("Replacement functions", function() {
       selector: '.markdown'
     });
 
-    expect(editor.sections.length).toBe(5);
-    expect($('.inline-section').toArray().length).toBe(5);
+    // ok, but now so 'hey' is split from the html.
+
+    expect(editor.sections.length).toBe(9);
+    expect($('.inline-section').toArray().length).toBe(9);
     expect($('.inline-edit-btn').toArray().length).toBe(2); // two should be editable
     done();
   });
