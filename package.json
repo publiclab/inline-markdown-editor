@@ -1,6 +1,6 @@
 {
   "name": "inline-markdown-editor",
-  "version": "0.3.4",
+  "version": "0.5.0",
   "description": "An inline wysiwyg markdown document editor based on replacing string subsections. WYSIWYG possible via woofmark.",
   "main": "dist/inlineMarkdownEditor.js",
   "scripts": {
