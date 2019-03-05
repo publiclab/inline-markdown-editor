@@ -31,6 +31,20 @@ describe("Replacement functions", function() {
     done();
   });
 
+  it("it correctly splits up really complex mixed HTML and markdown into sections", function(done) {
+    fixture = loadFixtures('table.html');
+
+    var editor = inlineMarkdownEditor({
+      replaceUrl: '/wiki/replace/',
+      selector: '.markdown'
+    });
+
+    expect(editor.sections.length).toBe(3);
+    expect($('.inline-section').toArray().length).toBe(3);
+    expect($('.inline-edit-btn').toArray().length).toBe(2); // two should be editable
+    done();
+  });
+
   it("sends exactly matching original text and 'before' parameters", function(done) {
     fixture = loadFixtures('index.html');
     var html     = "## Headings [with](/links)";
