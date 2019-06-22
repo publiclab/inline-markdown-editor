@@ -27,6 +27,7 @@
     "font-awesome": "~4.7.0",
     "jquery": "~3",
     "megamark": "^3.2.2",
+    "npm": "^6.9.0",
     "publiclab-editor": "^2.0.0"
   },
   "devDependencies": {
@@ -35,7 +36,7 @@
     "grunt-browserify": "^5.0.0",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-connect": "^2.0.0",
-    "grunt-contrib-jasmine": "~1.0.3",
+    "grunt-contrib-jasmine": "^2.0.3",
     "grunt-contrib-watch": "^1.1.0",
     "jasmine": "~3.3.1",
     "jasmine-ajax": "~3.4.0",

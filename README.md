@@ -6,16 +6,16 @@ An inline wysiwyg markdown document editor based on replacing string subsections
 
 ## Basics
 
-`inline-markdown-editor` splits up a Markdown-containing string by double newlines into sections, and parses each into HTML, which it displays. 
+`inline-markdown-editor` splits up a Markdown-containing string by double newlines into sections, and parses each into HTML, which it displays.
 
 It then adds an "edit button" beneath each section, which expands a nice form for editing that section either as Markdown or in rich text with a WYSIWYG editor.
 
-Upon submitting the form, an asynchronous AJAX post request is made to the specified server with parameters `before` and `after`, containing the original subsection markdown and its replacement. The form listens for a `true` or `false` response and updates the section's displayed HTML accordingly. 
+Upon submitting the form, an asynchronous AJAX post request is made to the specified server with parameters `before` and `after`, containing the original subsection markdown and its replacement. The form listens for a `true` or `false` response and updates the section's displayed HTML accordingly.
 
 For a demo, see:
 
 https://publiclab.github.io/inline-markdown-editor/examples/
-                                                           
+
 https://publiclab.github.io/inline-markdown-editor/examples/wysiwyg
 
 
@@ -61,7 +61,7 @@ After installing node and npm run `npm install` from the root directory.
 
 `inline-markdown-editor` uses grunt - the JavaScript task runner - for compilation of the modules. To install grunt run `npm install -g grunt-cli`. You may have to use `sudo` for root privileges.
 
-Make changes to the files in the `/src/` directory, then run `grunt build` to compile into `/dist/inlineMarkdownEditor.js`. This will use `grunt-browserify` to concatenate and include any node modules named in `require()` statements. You'll then be able to try it out in `/examples/index.html`. Run `grunt` and leave it running to build as you go.
+Make changes to the files in the `/src/` directory, then run `grunt build` to compile into `/dist/in  lineMarkdownEditor.js`. This will use `grunt-browserify` to concatenate and include any node modules named in `require()` statements. You'll then be able to try it out in `/examples/index.html`. Run `grunt` and leave it running to build as you go.
 
 ## Tests
 
@@ -70,7 +70,7 @@ Tests are set up with Jasmine, and can be run with `npm test`.
 ## Goals
 
 * configurable editors
-  * plan for swappable editors; will need to specify both constructor and onEditorSubmit in processSection
+* plan for swappable editors; will need to specify both constructor and onEditorSubmit in processSection
 * better modularization of processSection.js
 * more tests
 
