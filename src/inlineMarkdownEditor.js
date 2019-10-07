@@ -6,6 +6,11 @@ inlineMarkdownEditor = function inlineMarkdownEditor(o) {
   o.onFail = o.onFail || require('./onFail.js');
   o.isEditable = o.isEditable || require('./isEditable.js');
   o.processSections = require('./processSections.js');
+  o.onEdit = o.onEdit || require('./onEdit.js');
+  o.prepareAndSendSectionForm = o.prepareAndSendSectionForm || require('./prepareAndSendSectionForm.js');
+  o.submitSectionForm = o.submitSectionForm || require('./submitSectionForm.js');
+  o.insertFormIfMarkdown = o.insertFormIfMarkdown || require('./insertFormIfMarkdown.js');
+  
   var el = $(o.selector);
   o.originalMarkdown = el.html();
   o.preProcessor = o.preProcessor || function(m) { return m; }
@@ -29,3 +34,4 @@ inlineMarkdownEditor = function inlineMarkdownEditor(o) {
   };
 }
 module.exports = inlineMarkdownEditor;
+ 
