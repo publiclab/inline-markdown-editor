@@ -11,6 +11,26 @@ describe("Replacement functions", function() {
     expect($('.inline-edit-form textarea').length).toBe(1);
   });
 
+  it("it correctly splits up mixed HTML and markdown into sections", function(done) {
+    fixture = loadFixtures('index.html');
+    var html = "<div>lala</div>\n\nhey<table class='hey'><p><table></table></p></table>\n\n## Markdown\n\n<p>Hi there</p>\n\n* One\n* Two\n\n<table class='hey'><p><table></table></p></table>\n\nSo <p></p> shouldn't match\n\nAnd `<p></p>` shouldn't match either";
+    // note that <table>s here are improperly nested but we still want to treat them as a section
+
+    $('.markdown').html(html);
+
+    var editor = inlineMarkdownEditor({
+      replaceUrl: '/wiki/replace/',
+      selector: '.markdown'
+    });
+
+    // ok, but now so 'hey' is split from the html.
+
+    expect(editor.sections.length).toBe(9);
+    expect($('.inline-section').toArray().length).toBe(9);
+    expect($('.inline-edit-btn').toArray().length).toBe(2); // two should be editable
+    done();
+  });
+
   it("sends exactly matching original text and 'before' parameters", function(done) {
     fixture = loadFixtures('index.html');
     var html     = "## Headings [with](/links)";

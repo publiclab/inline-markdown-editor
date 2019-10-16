@@ -30,6 +30,7 @@ module.exports = function processSection(markdown, o) {
           // insert rich editor
           var editorOptions = o.editorOptions || {};
           editorOptions.textarea = $('#' + uniqueId + ' textarea')[0];
+          editorOptions.tagsModule = (editorOptions.tagsModule === true); // disable this to not require Bloodhound, unless overridden
           editor = new PL.Editor(editorOptions);
         }
         _form.find('.cancel').click(function inlineEditCancelClick(e) {
@@ -57,8 +58,12 @@ module.exports = function processSection(markdown, o) {
         after: after // encodeURI(after)
       })
       .done(function onComplete(result, success, xhr) {
-        // we should need fewer things here:
-        o.onComplete(xhr.status, after, html, _el, uniqueId, __form, o);
+        if (result == "false") {
+          o.onFail(result, uniqueId);
+        } else {
+          // we should need fewer things here:
+          o.onComplete(xhr.status, after, html, _el, uniqueId, __form, o);
+        }
       }).fail(function onFail(response) {
         o.onFail(response, uniqueId);
       }); // these don't work?
