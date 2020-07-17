@@ -34,7 +34,7 @@
     "grunt": "^1.0.3",
     "grunt-browserify": "^5.0.0",
     "grunt-contrib-concat": "^1.0.1",
-    "grunt-contrib-connect": "^2.0.0",
+    "grunt-contrib-connect": "^3.0.0",
     "grunt-contrib-jasmine": "~1.0.3",
     "grunt-contrib-watch": "^1.1.0",
     "jasmine": "~3.3.1",
