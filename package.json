@@ -27,6 +27,7 @@
     "font-awesome": "~4.7.0",
     "jquery": "~3",
     "megamark": "^3.2.2",
+    "node-html-parser": "^1.1.12",
     "publiclab-editor": "^2.0.0"
   },
   "devDependencies": {
