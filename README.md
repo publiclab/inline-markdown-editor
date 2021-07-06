@@ -63,6 +63,33 @@ After installing node and npm run `npm install` from the root directory.
 
 Make changes to the files in the `/src/` directory, then run `grunt build` to compile into `/dist/inlineMarkdownEditor.js`. This will use `grunt-browserify` to concatenate and include any node modules named in `require()` statements. You'll then be able to try it out in `/examples/index.html`. Run `grunt` and leave it running to build as you go.
 
+## Installation Guide
+
+## Pre-requisites
+* A Laptop :)
+* NodeJS
+
+To install [NodeJS](https://nodejs.org). A detailed instruction on installing node and npm is available in the [documentation](https://nodejs.org/en/docs/).
+
+* After installing nodejs, then comes running and installation of grunt. 
+npm run `npm install` from root directory :)
+
+This repository `inline-markdown-editor` uses grunt - the JavaScript task runner - for compilation of the modules.
+
+## grunt installation
+
+To install grunt run `npm install -g grunt-cli`. You may have to use `sudo` for root privileges.
+Make changes to the files in the `/src/` directory.
+Run `grunt build` to compile into `/dist/inlineMarkdownEditor.js`.
+This will use `grunt-browserify` to concatenate and include any node modules named in `require()` statements.
+You can try out in `/examples/index.html`.
+ Run `grunt`. 
+ You are all set. Happy contributing :)
+
+
+
+
+
 ## Tests
 
 Tests are set up with Jasmine, and can be run with `npm test`.
