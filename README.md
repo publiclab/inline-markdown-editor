@@ -69,7 +69,7 @@ Make changes to the files in the `/src/` directory, then run `grunt build` to co
 * A Laptop :)
 * NodeJS
 
- -Install [NodeJS](https://nodejs.org). 
+ - Install [NodeJS](https://nodejs.org). 
 
  - Instructions for installing node and npm  available in the [documentation](https://nodejs.org/en/docs/).
 
@@ -79,17 +79,17 @@ Make changes to the files in the `/src/` directory, then run `grunt build` to co
 
 This repository `inline-markdown-editor` uses grunt - the JavaScript task runner - for compilation of the modules.
 
--Grunt is a JavaScript task runner, a tool used to automatically perform frequent tasks such as minification, compilation, unit testing, and linting. It uses a command-line interface to run custom tasks defined in a file (known as a Gruntfile). Grunt was created by Ben Alman and is written in Node.js. It is distributed via npm. As of September 2016, there were more than 5,000 plugins available in the Grunt ecosystem.
+- Grunt is a JavaScript task runner, a tool used to automatically perform frequent tasks such as minification, compilation, unit testing, and linting. It uses a command-line interface to run custom tasks defined in a file (known as a Gruntfile). Grunt was created by Ben Alman and is written in Node.js. It is distributed via npm. As of September 2016, there were more than 5,000 plugins available in the Grunt ecosystem.
 
 ### Grunt Installation
 
--To install grunt run `npm install -g grunt-cli`. You may have to use `sudo` for root privileges.
--Make changes to the files in the `/src/` directory.
--Run `grunt build` to compile into `/dist/inlineMarkdownEditor.js`.
--This will use `grunt-browserify` to concatenate and include any node modules named in `require()` statements.
--You can try out in `/examples/index.html`.
+- To install grunt run `npm install -g grunt-cli`. You may have to use `sudo` for root privileges.
+- Make changes to the files in the `/src/` directory.
+- Run `grunt build` to compile into `/dist/inlineMarkdownEditor.js`.
+- This will use `grunt-browserify` to concatenate and include any node modules named in `require()` statements.
+- You can try out in `/examples/index.html`.
 - Run `grunt`. 
- -You are all set. Happy contributing :)
+ - You are all set. Happy contributing :)
 
 
 
