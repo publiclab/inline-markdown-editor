@@ -27,7 +27,7 @@
     "font-awesome": "~4.7.0",
     "jquery": "~3",
     "megamark": "^3.2.2",
-    "publiclab-editor": "^3.0.3"
+    "publiclab-editor": "^3.1.0"
   },
   "devDependencies": {
     "browserify": "16.3.0",
