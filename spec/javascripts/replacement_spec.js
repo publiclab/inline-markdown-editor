@@ -9,6 +9,7 @@ describe("Replacement functions", function() {
       selector: '.markdown'
     });
     expect($('.inline-edit-form textarea').length).toBe(1);
+    done();
   });
 
   it("it correctly splits up mixed HTML and markdown into sections", function(done) {
