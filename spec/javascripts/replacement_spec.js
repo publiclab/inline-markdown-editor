@@ -1,6 +1,6 @@
 describe("Replacement functions", function() {
 
-  it("won't generate an editor for an ambiguous (duplicated) section, where replacement server side could apply to the wrong section", function() {
+  it("won't generate an editor for an ambiguous (duplicated) section, where replacement server side could apply to the wrong section", function(done) {
     fixture = loadFixtures('index.html');
     var html = "Unique text.\n\nDuplicated text.\n\nDuplicated text.";
     $('.markdown').html(html);
