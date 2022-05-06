@@ -1,4 +1,6 @@
 *.swp
-node_modules
+node_modules/
 .grunt
 _SpecRunner.html
+bower.json
+bower_components/
