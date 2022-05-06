@@ -112,3 +112,12 @@ Tests are set up with Jasmine, and can be run with `npm test`.
 * preProcessor
 * postProcessor
 * insertForm: look for the form, the button
+
+## Note
+Node Version Manager
+
+Usage: 
+* nvm --help - Show this message
+* nvm --version - Print out the installed version of nvm
+* nvm install [-s] - Download and install a, [-s] from source
+* nvm ls - List installed versions nvm
