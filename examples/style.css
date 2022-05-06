@@ -76,3 +76,11 @@ h1 {
 .mod-image-select #drop img {
   width: 100%;
 }
+
+/* Styles for fork ribbon */
+
+.ribbon {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
