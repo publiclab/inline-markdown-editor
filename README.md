@@ -62,6 +62,65 @@ After installing node and npm run `npm install` from the root directory.
 `inline-markdown-editor` uses grunt - the JavaScript task runner - for compilation of the modules. To install grunt run `npm install -g grunt-cli`. You may have to use `sudo` for root privileges.
 
 Make changes to the files in the `/src/` directory, then run `grunt build` to compile into `/dist/inlineMarkdownEditor.js`. This will use `grunt-browserify` to concatenate and include any node modules named in `require()` statements. You'll then be able to try it out in `/examples/index.html`. Run `grunt` and leave it running to build as you go.
+## Dependencies
+### Node
+The easiest way to use and manage node with multiple versions is nvm (node version manager).
+
+To install just execute:
+
+```
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.35.0/install.sh | bash
+```
+
+or 
+
+```
+wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.35.0/install.sh | bash
+```
+
+To download, compile, and install the latest release of node, do this:
+
+```sh
+nvm install node # "node" is an alias for the latest version
+```
+
+To install a specific version of node:
+
+```sh
+nvm install 10.10.0 # or 8.9.1, etc
+```
+
+The first version installed becomes the default. New shells will start with the default version of node (e.g., `nvm alias default`).
+
+You can list available versions using `ls-remote`:
+
+```sh
+nvm ls-remote
+```
+
+And then in any new shell just use the installed version:
+
+```sh
+nvm use node
+```
+
+Or you can just run it:
+
+```sh
+nvm run node --version
+```
+
+Or, you can run any arbitrary command in a subshell with the desired version of node:
+
+```sh
+nvm exec 4.2 node --version
+```
+
+You can also get the path to the executable to where it was installed:
+
+```sh
+nvm which 5.0
+```
 
 ## Installation Guide
 
