@@ -32,6 +32,7 @@ describe("Replacement functions", function() {
   });
 
   it("sends exactly matching original text and 'before' parameters", function(done) {
+    
     fixture = loadFixtures('index.html');
     var html     = "## Headings [with](/links)";
     var new_html = "## Headings [with](/links) and other things";
@@ -42,23 +43,24 @@ describe("Replacement functions", function() {
       selector: '.markdown',
       submitSectionForm: submitSectionForm
     });
-
-    function submitSectionForm(e, before, after, o) {
-      expect(before).toBe(html);
-      expect(after).toBe(new_html);
-      expect(before).not.toBe(after);
+   
+    function submitSectionForm(e, props) {
+      expect(props.originalSectionMarkdown).toBe(html);
+      expect(props.changes).toBe(new_html);
+      expect(props.originalSectionMarkdown).not.toBe(props.changes);
       done();
     }
-
+     
     // generate an editor by clicking the pencil button
     $('.inline-edit-btn').click();
 
     $('.inline-edit-form textarea').html(new_html);
-
+    
     // trigger a section save:
     $('.inline-edit-form:last button.submit').click();
     expect(editor.options.submitSectionForm).toBe(submitSectionForm);
     expect(editor.options.originalMarkdown).toBe(html);
+    
   });
 
 });
