@@ -43,7 +43,13 @@ module.exports = function(grunt) {
         inlineMarkdownEditor: {
           src: 'dist/*.js',
           options: {
-            specs: 'spec/javascripts/*spec.js',
+            specs: [
+              'spec/javascripts/customization_spec.js',
+              'spec/javascripts/defaults_spec.js',
+              'spec/javascripts/editor_spec.js',
+              'spec/javascripts/error_handling_spec.js',
+              'spec/javascripts/replacement_spec.js'
+            ],
             vendor: [
               'node_modules/jquery/dist/jquery.min.js',
               'node_modules/jasmine-jquery/lib/jasmine-jquery.js',

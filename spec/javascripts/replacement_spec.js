@@ -1,6 +1,6 @@
 describe("Replacement functions", function() {
 
-  it("won't generate an editor for an ambiguous (duplicated) section, where replacement server side could apply to the wrong section", function() {
+  it("won't generate an editor for an ambiguous (duplicated) section, where replacement server side could apply to the wrong section", function(done) {
     fixture = loadFixtures('index.html');
     var html = "Unique text.\n\nDuplicated text.\n\nDuplicated text.";
     $('.markdown').html(html);
@@ -9,6 +9,7 @@ describe("Replacement functions", function() {
       selector: '.markdown'
     });
     expect($('.inline-edit-form textarea').length).toBe(1);
+    done();
   });
 
   it("it correctly splits up mixed HTML and markdown into sections", function(done) {
